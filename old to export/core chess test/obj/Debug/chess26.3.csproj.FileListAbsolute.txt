@@ -1,0 +1,8 @@
+C:\Users\Nitsan\source\repos\chess26.3\bin\Debug\chess26.3.exe.config
+C:\Users\Nitsan\source\repos\chess26.3\bin\Debug\chess26.3.exe
+C:\Users\Nitsan\source\repos\chess26.3\bin\Debug\chess26.3.pdb
+C:\Users\Nitsan\source\repos\chess26.3\obj\Debug\chess26.3.csproj.AssemblyReference.cache
+C:\Users\Nitsan\source\repos\chess26.3\obj\Debug\chess26.3.csproj.SuggestedBindingRedirects.cache
+C:\Users\Nitsan\source\repos\chess26.3\obj\Debug\chess26.3.csproj.CoreCompileInputs.cache
+C:\Users\Nitsan\source\repos\chess26.3\obj\Debug\chess26.3.exe
+C:\Users\Nitsan\source\repos\chess26.3\obj\Debug\chess26.3.pdb

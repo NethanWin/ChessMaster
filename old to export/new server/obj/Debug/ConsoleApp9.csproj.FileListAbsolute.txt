@@ -1,0 +1,8 @@
+C:\Users\Nitsan\source\repos\ConsoleApp9\bin\Debug\ConsoleApp9.exe.config
+C:\Users\Nitsan\source\repos\ConsoleApp9\bin\Debug\ConsoleApp9.exe
+C:\Users\Nitsan\source\repos\ConsoleApp9\bin\Debug\ConsoleApp9.pdb
+C:\Users\Nitsan\source\repos\ConsoleApp9\obj\Debug\ConsoleApp9.csproj.AssemblyReference.cache
+C:\Users\Nitsan\source\repos\ConsoleApp9\obj\Debug\ConsoleApp9.csproj.SuggestedBindingRedirects.cache
+C:\Users\Nitsan\source\repos\ConsoleApp9\obj\Debug\ConsoleApp9.csproj.CoreCompileInputs.cache
+C:\Users\Nitsan\source\repos\ConsoleApp9\obj\Debug\ConsoleApp9.exe
+C:\Users\Nitsan\source\repos\ConsoleApp9\obj\Debug\ConsoleApp9.pdb

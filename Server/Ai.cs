@@ -6,19 +6,44 @@ using System.Threading.Tasks;
 
 class Ai
 {
-    
-    public Ai() {}
-    private int GetScore(string fen)
+    public static int count = 0;
+    public static int Minmax(Board board, int depth, bool maximizingPlayer, bool blackToPlay)
     {
-        //to do
-        return 1;
-    }
-    //public Move GetBestMove(string fen) to do!
+        if (depth == 0)
+        {
+            count++;
+            return board.EvaluatePosition(blackToPlay);
+        }
 
-    public Branch[] GetNextGen(string board)
-    {   //to do
-        return null;
-    }
+        List<Board> nextGenBoards = board.GetNextGenBoards(blackToPlay);
+        if (maximizingPlayer)
+        {
 
-    
+            int value = int.MinValue;
+            foreach (Board b in nextGenBoards)
+            {
+                int minmaxResult = Minmax(b, depth - 1, false, !blackToPlay);
+                value = Math.Max(value, minmaxResult);
+                if (depth == Constants.MAX_DEPTH)
+                {
+                    //moveScores.Add(b, minmaxResult);
+                }
+            }
+            return value;
+        }
+        else
+        {
+            int value = int.MaxValue;
+            foreach (Board b in nextGenBoards)
+            {
+                int minmaxResult = Minmax(b, depth - 1, true, !blackToPlay);
+                value = Math.Min(value, minmaxResult);
+                if (depth == Constants.MAX_DEPTH)
+                {
+                    //moveScores.Add(move, minmaxResult);
+                }
+            }
+            return value;
+        }
+    }
 }

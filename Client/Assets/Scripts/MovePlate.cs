@@ -21,7 +21,6 @@ public class MovePlate : MonoBehaviour
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
         }
     }
-
     public void OnMouseUp()
     {
         controller = GameObject.FindGameObjectWithTag("GameController");
@@ -35,8 +34,6 @@ public class MovePlate : MonoBehaviour
                 controller.GetComponent<Game>().Winner("black");
             if (enemyChessPiece.name == "blackKing")
                 controller.GetComponent<Game>().Winner("white");
-
-
 
             Destroy(enemyChessPiece);
         }
@@ -53,19 +50,17 @@ public class MovePlate : MonoBehaviour
         controller.GetComponent<Game>().NextTurn();
 
         piece.DestroyMovePlates();
+        controller.GetComponent<Client>().SendMsg("hi");
     }
-
     public void SetCoords(int x, int y)
     {
         xBoard = x;
         yBoard = y;
     }
-
     public void SetRefrence(GameObject obj)
     {
         reference = obj;
     }
-
     public GameObject GetReference()
     {
         return reference;

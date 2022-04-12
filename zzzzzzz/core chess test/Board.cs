@@ -48,8 +48,6 @@ class Board
         blackPieces = new List<Piece>();
         whitePieces = new List<Piece>();
 
-
-
         int y = board.GetLength(0) - 1;
         int x = 0;
         foreach (char ch in fen)

@@ -138,3 +138,93 @@ C# parse time         : 241ms
 candidates check time : 43ms
 console write time    : 0ms
 
+[api-updater (non-obsolete-error-filter)] 4/9/2022 9:15:31 PM : Starting C:/Users/Nitsan/Documents/UNITY PROJECTS/2020.3.25f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 165.1632ms
+moved types parse time: 67ms
+candidates parse time : 1ms
+C# parse time         : 260ms
+candidates check time : 39ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 4/9/2022 9:16:00 PM : Starting C:/Users/Nitsan/Documents/UNITY PROJECTS/2020.3.25f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 90.7536ms
+moved types parse time: 79ms
+candidates parse time : 2ms
+C# parse time         : 250ms
+candidates check time : 41ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 4/9/2022 9:16:19 PM : Starting C:/Users/Nitsan/Documents/UNITY PROJECTS/2020.3.25f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 77.8172ms
+moved types parse time: 64ms
+candidates parse time : 1ms
+C# parse time         : 256ms
+candidates check time : 41ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 4/9/2022 9:20:40 PM : Starting C:/Users/Nitsan/Documents/UNITY PROJECTS/2020.3.25f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 70.6874ms
+moved types parse time: 58ms
+candidates parse time : 1ms
+C# parse time         : 217ms
+candidates check time : 37ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 4/9/2022 9:20:44 PM : Starting C:/Users/Nitsan/Documents/UNITY PROJECTS/2020.3.25f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 62.7195ms
+moved types parse time: 55ms
+candidates parse time : 1ms
+C# parse time         : 197ms
+candidates check time : 30ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 4/9/2022 9:20:47 PM : Starting C:/Users/Nitsan/Documents/UNITY PROJECTS/2020.3.25f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 79.6098ms
+moved types parse time: 52ms
+candidates parse time : 1ms
+C# parse time         : 235ms
+candidates check time : 42ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 4/9/2022 10:45:09 PM : Starting C:/Users/Nitsan/Documents/UNITY PROJECTS/2020.3.25f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 95.5283ms
+moved types parse time: 73ms
+candidates parse time : 1ms
+C# parse time         : 309ms
+candidates check time : 68ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 4/9/2022 10:53:42 PM : Starting C:/Users/Nitsan/Documents/UNITY PROJECTS/2020.3.25f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 87.764ms
+moved types parse time: 71ms
+candidates parse time : 1ms
+C# parse time         : 279ms
+candidates check time : 56ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 4/11/2022 10:05:00 PM : Starting C:/Users/Nitsan/Documents/UNITY PROJECTS/2020.3.25f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 162.4767ms
+moved types parse time: 67ms
+candidates parse time : 1ms
+C# parse time         : 284ms
+candidates check time : 42ms
+console write time    : 0ms
+

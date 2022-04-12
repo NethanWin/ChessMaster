@@ -364,6 +364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 754101711}
   - component: {fileID: 754101712}
+  - component: {fileID: 754101713}
   m_Layer: 0
   m_Name: Controller
   m_TagString: GameController
@@ -397,7 +398,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 493f4e8c3245c074190e69a9a51c4caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waitForServer: 0
   chesspiece: {fileID: 7896177171167452589, guid: c5daed4400be6654089323ca228b712d, type: 3}
+--- !u!114 &754101713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754101710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be4c4ed1da5bc6e4d8f3070aef04ad05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1636939991
 GameObject:
   m_ObjectHideFlags: 0

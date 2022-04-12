@@ -43,7 +43,6 @@ public class ChessMan : MonoBehaviour
             case "whitePawn": this.GetComponent<SpriteRenderer>().sprite = whitePawn; player = "white"; break;
         }
     }
-
     public void SetCoords()
     {
         float x = xBoard * 0.9f - 3.15f;
@@ -51,17 +50,14 @@ public class ChessMan : MonoBehaviour
 
         this.transform.position = new Vector3(x, y, -1.0f);
     }
-
     public int GetXBoard()
     {
         return xBoard;
     }
-
     public int GetYBoard()
     {
         return yBoard;
     }
-
     public void SetXBoard(int x)
     {
         xBoard = x;
@@ -80,6 +76,7 @@ public class ChessMan : MonoBehaviour
 
             InitiateMovePlates();
         }
+
     }
 
     public void DestroyMovePlates()
@@ -88,7 +85,6 @@ public class ChessMan : MonoBehaviour
         for (int i = 0; i < movePlates.Length; i++)
             Destroy(movePlates[i]);
     }
-
     public void InitiateMovePlates()
     {
         switch (this.name)
@@ -142,7 +138,6 @@ public class ChessMan : MonoBehaviour
 
         }
     }
-
     public void LineMovePlate(int dx, int dy)
     {
         Game sc = controller.GetComponent<Game>();
@@ -163,7 +158,6 @@ public class ChessMan : MonoBehaviour
             MovePlateAttackSpawn(x, y);
         }
     }
-
     public void LMovePlate()
     {
         PointMovePlate(xBoard + 1, yBoard + 2);
@@ -175,7 +169,6 @@ public class ChessMan : MonoBehaviour
         PointMovePlate(xBoard - 2, yBoard + 1);
         PointMovePlate(xBoard - 2, yBoard - 1);
     }
-
     public void SurroundMovePlate()
     {
         PointMovePlate(xBoard, yBoard + 1);
@@ -187,7 +180,6 @@ public class ChessMan : MonoBehaviour
         PointMovePlate(xBoard - 1, yBoard + 1);
         PointMovePlate(xBoard - 1, yBoard - 1);
     }
-
     public void PointMovePlate(int x, int y)
     {
         Game sc = controller.GetComponent<Game>();
@@ -205,7 +197,6 @@ public class ChessMan : MonoBehaviour
             }
         }    
     }
-
     public void PawnMovePlate(int x, int y)
     {
         Game sc = controller.GetComponent<Game>();
@@ -228,7 +219,6 @@ public class ChessMan : MonoBehaviour
             }
         }
     }
-    
     public void MovePlateSpawn(int matrixX, int matrixY)
     {
         /*float x = matrixX;
@@ -249,7 +239,6 @@ public class ChessMan : MonoBehaviour
         mpScript.SetRefrence(gameObject);
         mpScript.SetCoords(matrixX, matrixY);
     }
-
     public void MovePlateAttackSpawn(int matrixX, int matrixY)
     {
         float x = matrixX * 0.9f - 3.15f;

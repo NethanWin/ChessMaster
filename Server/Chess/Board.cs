@@ -10,6 +10,84 @@ class Board
     private List<Piece> blackPieces;
     private List<Piece> whitePieces;
     private int turn;
+    private static sbyte[,] pawn =
+    {
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 50, 50, 50, 50, 50, 50, 50, 50 },
+        { 10, 10, 10, 10, 10, 10, 10, 10 },
+        { 10, 10, 20, 30, 30, 20, 10, 10 },
+        { 5, 5, 10, 25, 25, 10, 5, 5 },
+        { 0, 0, 0, 20, 20, 0, 0, 0 },
+        { 5, -5, -10, 0, 0, -10, -5, 5 },
+        { 5, 10, 10, -20, -20, 10, 10, 5 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 }
+    };
+    private static sbyte[,] knight =
+    {
+        { -50, -40, -30, -30, -30, -30, -40, -50 },
+        { 50, 50, 50, 50, 50, 50, 50, 50 },
+        { 10, 10, 10, 10, 10, 10, 10, 10 },
+        { 10, 10, 20, 30, 30, 20, 10, 10 },
+        { 5, 5, 10, 25, 25, 10, 5, 5 },
+        { 0, 0, 0, 20, 20, 0, 0, 0 },
+        { 5, -5, -10, 0, 0, -10, -5, 5 },
+        { 5, 10, 10, -20, -20, 10, 10, 5 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 }
+    };
+    private static sbyte[,] bishop =
+    {
+        { -20, -10, -10, -10, -10, -10, -10, -20 },
+        { -10, 0, 0, 0, 0, 0, 0, -10 },
+        { -10, 0, 5, 10, 10, 5, 0, -10 },
+        { -10, 5, 5, 10, 10, 5, 5, -10 },
+        { -10, 0, 10, 10, 10, 10, 0, -10 },
+        { -10, 10, 10, 10, 10, 10, 10, -10},
+        { -10, 5, 0, 0, 0, 0, 5, -10 },
+        { -20, -10, -10, -10, -10, -10, -10, -20 }
+    };
+    private static sbyte[,] rook =
+    {
+        { 0, 0, 0, 0, 0, 0, 0, 0},
+        { 5, 10, 10, 10, 10, 10, 10, 5},
+        { -5, 0, 0, 0, 0, 0, 0, -5 },
+        { -5, 0, 0, 0, 0, 0, 0, -5 },
+        { -5, 0, 0, 0, 0, 0, 0, -5 },
+        { -5, 0, 0, 0, 0, 0, 0, -5 },
+        { -5, 0, 0, 0, 0, 0, 0, -5 },
+        { 0, 0, 0, 5, 5, 0, 0, 0}
+    };
+    private static sbyte[,] queen =
+    {
+        { -20, -10, -10, -5, -5, -10, -10, -20 },
+        { -10, 0, 0, 0, 0, 0, 0, -10 },
+        { -10,  0,  5,  5,  5,  5,  0,-10 },
+        { -5,  0,  5,  5,  5,  5,  0, -5, },
+        { 0,  0,  5,  5,  5,  5,  0, -5, },
+        { -10,  5,  5,  5,  5,  5,  0,-10, },
+        { -10,  0,  5,  0,  0,  0,  0,-10, },
+        { -20,-10,-10, -5, -5,-10,-10,-20 }
+    };
+    private static sbyte[,] king =
+    {
+        {-30,-40,-40,-50,-50,-40,-40,-30 },
+        { -30,-40,-40,-50,-50,-40,-40,-30 },
+        { -30,-40,-40,-50,-50,-40,-40,-30},
+        { -30,-40,-40,-50,-50,-40,-40,-30},
+        { -20,-30,-30,-40,-40,-30,-30,-20},
+        { -10,-20,-20,-20,-20,-20,-20,-10},
+        { 20, 20,  0,  0,  0,  0, 20, 20},
+        { 20, 30, 10,  0,  0, 10, 30, 20}
+    };
+
+    // king end game
+    /*-50,-40,-30,-20,-20,-30,-40,-50,
+    -30,-20,-10,  0,  0,-10,-20,-30,
+    -30,-10, 20, 30, 30, 20,-10,-30,
+    -30,-10, 30, 40, 40, 30,-10,-30,
+    -30,-10, 30, 40, 40, 30,-10,-30,
+    -30,-10, 20, 30, 30, 20,-10,-30,
+    -30,-30,  0,  0,  0,  0,-30,-30,
+    -50,-30,-30,-30,-30,-30,-30,-50*/
 
     public Board()
     {
@@ -36,21 +114,20 @@ class Board
         AddToBoard(new Piece(PType.Rook, true, new Point(7, 7)));
 
 
-        for (int i = 0; i < 8; i++)
+        for (byte i = 0; i < 8; i++)
         {
             AddToBoard(new Piece(PType.Pawn, false, new Point(i, 1)));
             AddToBoard(new Piece(PType.Pawn, true, new Point(i, 6)));
         }
     }
-
     public Board(string fen)
     {
         board = new Piece[8, 8];
         blackPieces = new List<Piece>();
         whitePieces = new List<Piece>();
 
-        int y = board.GetLength(0) - 1;
-        int x = 0;
+        byte y = (byte)(board.GetLength(0) - 1);
+        byte x = 0;
         foreach (char ch in fen)
         {
             if (ch == '/')
@@ -60,7 +137,7 @@ class Board
             }
             else if (ch - '0' >= 0 && ch - '0' < 9)
             {
-                x += ch - '0';
+                x += (byte)(ch - '0');
             }
             else
             {
@@ -71,12 +148,26 @@ class Board
             }
         }
     }
-
+    internal int EvaluatePiece(bool whiteToPlay, Piece p)
+    {
+        //returns the value of a piece acording to it's position
+        byte x = p.GetX();
+        byte y = p.GetY();
+        PType type = p.GetPType();
+        if (whiteToPlay)
+        {
+            
+        }
+    }
     internal int EvaluatePosition(bool whiteToPlay)
     {
+        byte x;
+        byte y;
         int result = 0;
+
         foreach (char ch in GetFen())
         {
+
             switch (ch)
             {
                 case '1':
@@ -89,6 +180,7 @@ class Board
         }
         return result;
     }
+    public int EvaluatePawn() => ;
 
     private (PType, bool) GetPTypeFromChar(char ch)
     {
@@ -159,7 +251,7 @@ class Board
                         fen += countEmptySpace;
                         countEmptySpace = 0;
                     }
-                    fen += board[x, y].GetPieceType();
+                    fen += board[x, y].GetPieceChar();
                 }
                 else
                     countEmptySpace++;
@@ -194,7 +286,7 @@ class Board
     {
         if (!IsOutsideBoard(move.GetTargetPoint()))
         {
-            Piece piece = board[move.GetstartPoint().x, move.GetstartPoint().y];
+            Piece piece = board[move.GetStartPoint().x, move.GetStartPoint().y];
             Piece target = board[move.GetTargetPoint().x, move.GetTargetPoint().y];
             if (target != null)
             {
@@ -205,7 +297,7 @@ class Board
             }
             piece.setPos(move.GetTargetPoint());
             SetPiece(piece, move.GetTargetPoint());
-            SetPiece(null, move.GetstartPoint());
+            SetPiece(null, move.GetStartPoint());
         }
         return !IsOutsideBoard(move.GetTargetPoint());
     }

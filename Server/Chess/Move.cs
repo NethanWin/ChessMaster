@@ -7,7 +7,7 @@
         startPoint = start;
         targetPoint = target;
     }
-    public Point GetstartPoint() => startPoint;
+    public Point GetStartPoint() => startPoint;
     public Point GetTargetPoint() => targetPoint;
     public override string ToString()
     {

@@ -1,9 +1,9 @@
 ﻿public class Point
 {
-    public int x;
-    public int y;
+    public byte x;
+    public byte y;
 
-    public Point(int x, int y)
+    public Point(byte x, byte y)
     {
         this.x = x;
         this.y = y;

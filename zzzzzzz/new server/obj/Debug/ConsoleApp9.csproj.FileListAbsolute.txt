@@ -6,3 +6,11 @@ C:\Users\Nitsan\source\repos\ConsoleApp9\obj\Debug\ConsoleApp9.csproj.SuggestedB
 C:\Users\Nitsan\source\repos\ConsoleApp9\obj\Debug\ConsoleApp9.csproj.CoreCompileInputs.cache
 C:\Users\Nitsan\source\repos\ConsoleApp9\obj\Debug\ConsoleApp9.exe
 C:\Users\Nitsan\source\repos\ConsoleApp9\obj\Debug\ConsoleApp9.pdb
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\new server\bin\Debug\ConsoleApp9.exe.config
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\new server\bin\Debug\ConsoleApp9.exe
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\new server\bin\Debug\ConsoleApp9.pdb
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\new server\obj\Debug\ConsoleApp9.csproj.AssemblyReference.cache
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\new server\obj\Debug\ConsoleApp9.csproj.SuggestedBindingRedirects.cache
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\new server\obj\Debug\ConsoleApp9.csproj.CoreCompileInputs.cache
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\new server\obj\Debug\ConsoleApp9.exe
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\new server\obj\Debug\ConsoleApp9.pdb

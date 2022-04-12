@@ -6,3 +6,11 @@ C:\Users\Nitsan\source\repos\chess26.3\obj\Debug\chess26.3.csproj.SuggestedBindi
 C:\Users\Nitsan\source\repos\chess26.3\obj\Debug\chess26.3.csproj.CoreCompileInputs.cache
 C:\Users\Nitsan\source\repos\chess26.3\obj\Debug\chess26.3.exe
 C:\Users\Nitsan\source\repos\chess26.3\obj\Debug\chess26.3.pdb
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\core chess test\bin\Debug\chess26.3.exe.config
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\core chess test\bin\Debug\chess26.3.exe
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\core chess test\bin\Debug\chess26.3.pdb
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\core chess test\obj\Debug\chess26.3.csproj.AssemblyReference.cache
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\core chess test\obj\Debug\chess26.3.csproj.SuggestedBindingRedirects.cache
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\core chess test\obj\Debug\chess26.3.csproj.CoreCompileInputs.cache
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\core chess test\obj\Debug\chess26.3.exe
+c:\Users\Nitsan\Documents\UNITY PROJECTS\ChessMaster\zzzzzzz\core chess test\obj\Debug\chess26.3.pdb

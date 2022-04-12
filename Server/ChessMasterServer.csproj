@@ -44,14 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ai.cs" />
-    <Compile Include="OldChess\Branch.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="OldChess\Chess.cs" />
     <Compile Include="Chess\Board.cs" />
     <Compile Include="Chess\Move.cs" />
     <Compile Include="Chess\Piece.cs" />
     <Compile Include="Chess\Point.cs" />
-    <Compile Include="OldChess\Point2.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

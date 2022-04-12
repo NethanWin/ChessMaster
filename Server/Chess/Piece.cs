@@ -54,7 +54,6 @@ class Piece
                 moves.RemoveAt(i);
         }
     }
-
     private void UpdateMoves_King(Board board)
     {
         moves.Add(GetMoveReletive(0, 1));
@@ -112,38 +111,37 @@ class Piece
                 moves.Add(GetMoveReletive(0, -2));
         }
     }
-
-    private Move GetMoveReletive(int x, int y)
+    private Move GetMoveReletive(sbyte x, sbyte y)
     {
         //movement reletive to the currentPos
-        return GetMove(currentPos.x + x, currentPos.y + y);
+        return GetMove((byte)(currentPos.x + x), (byte)(currentPos.y + y));
     }
-    private Move GetMove(int x, int y)
+    private Move GetMove(byte x, byte y)
     {
         return new Move(currentPos, new Point(x, y));
     }
-    private void UpdateMoveLine(Board board, int dx, int dy)
+    private void UpdateMoveLine(Board board, sbyte dx, sbyte dy)
     {
         //adds raw moves for a line (dx and dy is the direction of the line)
-        int x = currentPos.x + dx;
-        int y = currentPos.y + dy;
-        for (;!board.IsOutsideBoard(new Point(x, y)); x += dx, y += dy)
+        byte x = (byte)(currentPos.x + dx);
+        byte y = (byte)(currentPos.y + dy);
+        for (;!board.IsOutsideBoard(new Point(x, y)); x = (byte)(dx + x), y = (byte)(dy + y))
         {
             moves.Add(GetMove(x, y));
             if (board.IsAllyOnPoint(new Point(x, y), isBlack))
                 break;
         }
     }
-
-    public int GetX() => currentPos.x;
-    public int GetY() => currentPos.y;
+    public byte GetX() => currentPos.x;
+    public byte GetY() => currentPos.y;
     public bool GetIsBlack() => isBlack;
-    public char GetPieceType()
+    public char GetPieceChar()
     {
         if (isBlack)
             return GetBaseType();
         return (char)(GetBaseType() + 'A' - 'a');
     }
+    public PType GetPType() => type;
     private char GetBaseType()
     {
         switch(type)
@@ -164,17 +162,11 @@ class Piece
                 return ' ';
         }
     }
-    
     //temp method
     public List<Move> GetMoves() => moves;
-
     public void setPos(Point newPos)
     {
         currentPos = new Point(newPos.x, newPos.y);
         isFirstMove = false;
-    }
-    public override string ToString()
-    {
-        return currentPos.ToString();
     }
 }

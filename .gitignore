@@ -1,2 +1,4 @@
+# remove all temperery files
 Client/Logs/
+Temp/
 Client/Library/

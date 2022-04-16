@@ -70,7 +70,7 @@ public class ChessMan : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (!controller.GetComponent<Game>().IsGameOver() && controller.GetComponent<Game>().GetCurrentPlayer() == player)
+        if (!controller.GetComponent<Game>().IsGameOver() && controller.GetComponent<Game>().GetWhiteTurn() && player == "white")
         {
             DestroyMovePlates();
 

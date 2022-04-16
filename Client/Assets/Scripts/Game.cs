@@ -1,28 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using UnityEngine;
-using System.Text;
 
 public class Game : MonoBehaviour
 {
     //States
     public bool waitForServer = false;
     public GameObject chesspiece;
-    private GameObject[,] positions = new GameObject[8, 8];
-    private string currentPlayer = "white";
+    private GameObject[,] board = new GameObject[8, 8];
+    private bool whiteTurn = true;
     private bool gameOver = false;
 
+    public string GetBoard()
+    {
+        string fen = "";
+        int countEmpty = 0;
+        for (int y = 7; y >= 0; y--)
+        {
+            countEmpty = 0;
+            for (int x = 0; x < 8; x++)
+            {
+                if (board[x, y] != null)
+                {
+                    if (countEmpty != 0)
+                    {
+                        fen += countEmpty;
+                        countEmpty = 0;
+                    }
+                    fen += GetCharFromPType(board[x, y].name);
+                }
+                else
+                    countEmpty++;
+            }
+            if (countEmpty > 0)
+                fen += countEmpty;
+            fen += '/';
+        }
+        return fen.Substring(0, fen.Length - 1);
+    }
     public void BuildBoard(string fen)
     {
         fen = String.Concat(fen.Where(c => !Char.IsWhiteSpace(c)));
-        foreach (GameObject go in positions)
+        foreach (GameObject go in board)
         {
             Destroy(go);
         }
@@ -60,6 +81,23 @@ public class Game : MonoBehaviour
             }
         }
     }
+    private char GetCharFromPType(string name)
+    {
+        string piece = name.Substring(5, name.Length - 5);
+        char ch = (char)0;
+        if (name.StartsWith("white"))
+            ch = (char)(ch + 'A' - 'a');
+        switch (piece)
+        {
+            case "King": return (char)(ch + 'k');
+            case "Queen": return (char)(ch + 'q');
+            case "Bishop": return (char)(ch + 'b');
+            case "Knight": return (char)(ch + 'n');
+            case "Rook": return (char)(ch + 'r');
+            case "Pawn": return (char)(ch + 'p');
+        }
+        return ch;
+    }
     private (string, bool) GetPTypeFromChar(char ch)
     {
         //(PType, isBlack)
@@ -89,7 +127,7 @@ public class Game : MonoBehaviour
     }
     void Start()
     {
-        /*playerWhite = new GameObject[] { Create("whiteRook", 0, 0), Create("whiteKnight", 1, 0),
+        GameObject[] playerWhite = new GameObject[] { Create("whiteRook", 0, 0), Create("whiteKnight", 1, 0),
             Create("whiteBishop", 2, 0), Create("whiteQueen", 3, 0), Create("whiteKing", 4, 0),
             Create("whiteBishop", 5, 0), Create("whiteKnight", 6, 0), Create("whiteRook", 7, 0),
             Create("whitePawn", 0, 1), Create("whitePawn", 1, 1), Create("whitePawn", 2, 1),
@@ -97,7 +135,7 @@ public class Game : MonoBehaviour
             Create("whitePawn", 6, 1), Create("whitePawn", 7, 1)
         };
         
-        playerBlack = new GameObject[] { Create("blackRook", 0, 7), Create("blackKnight",1,7),
+        GameObject[] playerBlack = new GameObject[] { Create("blackRook", 0, 7), Create("blackKnight",1,7),
             Create("blackBishop",2,7), Create("blackQueen",3,7), Create("blackKing",4,7),
             Create("blackBishop",5,7), Create("blackKnight",6,7), Create("blackRook",7,7),
             Create("blackPawn", 0, 6), Create("blackPawn", 1, 6), Create("blackPawn", 2, 6),
@@ -108,12 +146,17 @@ public class Game : MonoBehaviour
         {
             SetPosition(playerBlack[i]);
             SetPosition(playerWhite[i]);
-        }*/
-        
-        GameObject king = Create("blackKing", 5, 2);
-        SetPosition(king);
-        GameObject king2 = Create("whiteKing", 4, 2);
-        SetPosition(king2);
+        }
+
+    }
+    public void Update()
+    {
+        if (gameOver == true && Input.GetMouseButtonDown(0))
+        {
+            gameOver = false;
+
+            SceneManager.LoadScene("Game");
+        }
     }
     public GameObject Create(string name, int x, int y)
     {
@@ -129,44 +172,32 @@ public class Game : MonoBehaviour
     {
         ChessMan cm = obj.GetComponent<ChessMan>();
 
-        positions[cm.GetXBoard(), cm.GetYBoard()] = obj;
+        board[cm.GetXBoard(), cm.GetYBoard()] = obj;
     }
     public void SetPositionEmpty(int x, int y)
     {
-        positions[x, y] = null;
+        board[x, y] = null;
     }
     public GameObject GetPosition(int x, int y)
     {
-        return positions[x, y];
+        return board[x, y];
     }
     //is a postion on the board
     public bool IsPositionOnBoard(int x, int y)
     {
-        return !(x < 0 || y < 0 || x >= positions.GetLength(0) || y >= positions.GetLength(1));
+        return !(x < 0 || y < 0 || x >= board.GetLength(0) || y >= board.GetLength(1));
     }
-    public string GetCurrentPlayer()
-    {
-        return currentPlayer;
-    }
+    public bool GetWhiteTurn() => whiteTurn;
     public bool IsGameOver()
     {
         return gameOver;
     }
     public void NextTurn()
     {
-        if (currentPlayer == "white")
-            currentPlayer = "black";
+        if (whiteTurn)
+            whiteTurn = false;
         else
-            currentPlayer = "white";
-    }
-    public void Update()
-    {
-        if (gameOver == true && Input.GetMouseButtonDown(0))
-        {
-            gameOver = false;
-
-            SceneManager.LoadScene("Game");
-        }
+            whiteTurn = true;
     }
     public void Winner(string playerWinner)
     {

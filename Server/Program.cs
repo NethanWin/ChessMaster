@@ -12,6 +12,12 @@ using System.Net.Sockets;
 class Program
 {
     public const int SERVER_PORT = 11000;
+    public static void Main(string[] args)
+    {
+        ManagingClients();
+        //MinmaxPerformanceTest();
+        //TestEvaluation();
+    }
     public static void ManagingClients()
     {
         //main command which handles new clients and creates thread for each
@@ -70,7 +76,13 @@ class Program
                     int bytesRec = clientSocket.Receive(bytes);
                     data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
                     Console.WriteLine("{0}: {1}", Thread.CurrentThread.Name, data);
-                    msg = Encoding.ASCII.GetBytes("r1b1k1nr/6N1/n2B4/1p1NP2P/6P1/3P1Q2/P1P1K3/q5bb");
+
+                    //testing time
+                    Board recivedBoard = new Board(data);
+                    Ai.Minmax(recivedBoard, 2, true, true);
+                    Board chosenBoard = recivedBoard.GetNextGenBoards(true)[0];
+
+                    msg = Encoding.ASCII.GetBytes(chosenBoard.GetFen());
                     clientSocket.Send(msg);
                 }
                 Thread.Sleep(100);
@@ -84,6 +96,8 @@ class Program
         }
         Console.WriteLine("close");
     }
+
+    //Testing
     public static void MinmaxPerformanceTest()
     {
         Stopwatch stopwatch = new Stopwatch();
@@ -93,11 +107,32 @@ class Program
         Console.WriteLine(stopwatch.ElapsedMilliseconds / 1000.0);
         Console.WriteLine(Ai.count);
     }
-    public static void Main(string[] args)
+    public static void TestEvaluation()
     {
-        //ManagingClients();
-        //MinmaxPerformanceTest();
         Board b = new Board("8/pppp4/8/8/8/8/8/8");
         Console.WriteLine(b.EvaluateBoard(true));
+    }
+
+
+    private static char GetCharFromPType(string name)
+    {
+        string piece = name.Substring(5, name.Length - 5);
+        char ch = (char)0;
+        if (name.StartsWith("white"))
+            ch = (char)(ch + 'A' - 'a');
+        switch (piece)
+        {
+            case "King": return (char)(ch + 'k');
+            case "Queen": return (char)(ch + 'q');
+            case "Bishop": return (char)(ch + 'b');
+            case "Knight": return (char)(ch + 'n');
+            case "Rook": return (char)(ch + 'r');
+            case "Pawn": return (char)(ch + 'p');
+        }
+        return ch;
+    }
+    public static void TestPType()
+    {
+        Console.WriteLine(GetCharFromPType("whitePawn"));
     }
 }

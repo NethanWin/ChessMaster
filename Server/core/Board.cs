@@ -147,12 +147,10 @@ class Board
     }
     internal Int16 EvaluatePiece(bool whiteToPlay, Piece p, byte x, byte y)
     {
-        Console.WriteLine(x + ", " + y);
         //returns the value of a piece acording to it's position
         PType type = p.GetPType();
         if (whiteToPlay == !p.GetIsBlack())
             y = (byte)(7 - y);
-        Console.WriteLine(x + ", " + y);
         switch (type)
         {
             case PType.King: return king[y, x];

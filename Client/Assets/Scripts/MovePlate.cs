@@ -38,7 +38,7 @@ public class MovePlate : MonoBehaviour
             Destroy(enemyChessPiece);
         }
 
-        //set empty in the old piece's positions
+        //set empty in the old piece's board
         controller.GetComponent<Game>().SetPositionEmpty(piece.GetXBoard(),piece.GetYBoard());
 
         piece.SetXBoard(xBoard);
@@ -50,7 +50,7 @@ public class MovePlate : MonoBehaviour
         controller.GetComponent<Game>().NextTurn();
 
         piece.DestroyMovePlates();
-        controller.GetComponent<Client>().SendMsg("hi");
+        controller.GetComponent<Client>().SendBoard();
     }
     public void SetCoords(int x, int y)
     {

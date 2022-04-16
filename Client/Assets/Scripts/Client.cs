@@ -45,6 +45,11 @@ public class Client : MonoBehaviour
         socket.Shutdown(SocketShutdown.Both);
         socket.Close();
     }
+    public void SendBoard()
+    {
+        Debug.Log(game.GetBoard());
+        SendMsg(game.GetBoard());
+    }
     public void SendMsg(string msg)
     {
         try
@@ -82,10 +87,11 @@ public class Client : MonoBehaviour
                 Debug.Log("recived len" + fen.Length);
                 if (fen != "")
                 {
-                    game.BuildBoard(fen);//, 0, bytesRec));
+                    game.BuildBoard(fen);
                     waitForServer = false;
+                    game.NextTurn();
                 }
             }
-            catch (Exception e){}
+            catch (Exception) { }
     }
 }

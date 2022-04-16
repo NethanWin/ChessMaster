@@ -45,10 +45,10 @@
   <ItemGroup>
     <Compile Include="Ai.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Chess\Board.cs" />
-    <Compile Include="Chess\Move.cs" />
-    <Compile Include="Chess\Piece.cs" />
-    <Compile Include="Chess\Point.cs" />
+    <Compile Include="core\Board.cs" />
+    <Compile Include="core\Move.cs" />
+    <Compile Include="core\Piece.cs" />
+    <Compile Include="core\Point.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

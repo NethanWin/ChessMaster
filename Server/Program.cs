@@ -1,4 +1,5 @@
-﻿using System;
+﻿//ChessMaster Server
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -95,6 +96,8 @@ class Program
     public static void Main(string[] args)
     {
         //ManagingClients();
-        MinmaxPerformanceTest();
+        //MinmaxPerformanceTest();
+        Board b = new Board("8/pppp4/8/8/8/8/8/8");
+        Console.WriteLine(b.EvaluateBoard(true));
     }
 }

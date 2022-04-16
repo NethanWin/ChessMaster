@@ -12,9 +12,8 @@ class Ai
         if (depth == 0)
         {
             count++;
-            return board.EvaluatePosition(blackToPlay);
+            return board.EvaluateBoard(blackToPlay);
         }
-
         List<Board> nextGenBoards = board.GetNextGenBoards(blackToPlay);
         if (maximizingPlayer)
         {

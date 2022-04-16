@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+//ChessMaster
 // Client app is the one sending messages to a Server/listener.
 // Both listener and client can send messages back and forth once a
 // communication is established.

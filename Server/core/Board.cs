@@ -9,7 +9,6 @@ class Board
     private Piece[,] board;
     private List<Piece> blackPieces;
     private List<Piece> whitePieces;
-    private int turn;
     private static sbyte[,] pawn =
     {
         { 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -69,14 +68,14 @@ class Board
     };
     private static sbyte[,] king =
     {
-        {-30,-40,-40,-50,-50,-40,-40,-30 },
+        { -30,-40,-40,-50,-50,-40,-40,-30 },
         { -30,-40,-40,-50,-50,-40,-40,-30 },
         { -30,-40,-40,-50,-50,-40,-40,-30},
         { -30,-40,-40,-50,-50,-40,-40,-30},
         { -20,-30,-30,-40,-40,-30,-30,-20},
         { -10,-20,-20,-20,-20,-20,-20,-10},
-        { 20, 20,  0,  0,  0,  0, 20, 20},
-        { 20, 30, 10,  0,  0, 10, 30, 20}
+        { 20,20,0,0,0,0,20,20 },
+        { 20,30,10,0,0,10,30,20 }
     };
 
     // king end game
@@ -88,13 +87,11 @@ class Board
     -30,-10, 20, 30, 30, 20,-10,-30,
     -30,-30,  0,  0,  0,  0,-30,-30,
     -50,-30,-30,-30,-30,-30,-30,-50*/
-
     public Board()
     {
         board = new Piece[8,8];
         blackPieces = new List<Piece>();
         whitePieces = new List<Piece>();
-        turn = 0;
         AddToBoard(new Piece(PType.Rook, false, new Point(0,0)));
         AddToBoard(new Piece(PType.Knight, false, new Point(1,0)));
         AddToBoard(new Piece(PType.Bishop, false, new Point(2,0)));
@@ -148,40 +145,34 @@ class Board
             }
         }
     }
-    internal int EvaluatePiece(bool whiteToPlay, Piece p)
+    internal Int16 EvaluatePiece(bool whiteToPlay, Piece p, byte x, byte y)
     {
+        Console.WriteLine(x + ", " + y);
         //returns the value of a piece acording to it's position
-        byte x = p.GetX();
-        byte y = p.GetY();
         PType type = p.GetPType();
-        if (whiteToPlay)
+        if (whiteToPlay == !p.GetIsBlack())
+            y = (byte)(7 - y);
+        Console.WriteLine(x + ", " + y);
+        switch (type)
         {
-            
+            case PType.King: return king[y, x];
+            case PType.Queen: return queen[y, x];
+            case PType.Rook: return rook[y, x];
+            case PType.Bishop: return bishop[y, x];
+            case PType.Knight: return knight[y, x];
+            case PType.Pawn: return pawn[y, x];
+            default: return 0;
         }
     }
-    internal int EvaluatePosition(bool whiteToPlay)
+    internal Int16 EvaluateBoard(bool whiteToPlay)
     {
-        byte x;
-        byte y;
-        int result = 0;
-
-        foreach (char ch in GetFen())
-        {
-
-            switch (ch)
-            {
-                case '1':
-                    result ++;
-                    continue;
-                case 'p':
-                    result++;
-                    continue;
-            }
-        }
-        return result;
+        //evaluate the points for the board
+        Int16 count = 0;
+        foreach (Piece p in board)
+            if (p != null)
+                count += EvaluatePiece(whiteToPlay, p, p.GetX(), p.GetY());
+        return count;
     }
-    public int EvaluatePawn() => ;
-
     private (PType, bool) GetPTypeFromChar(char ch)
     {
         //(PType, isBlack)
@@ -281,7 +272,6 @@ class Board
         }
         return moves;
     }
-    
     public bool MakeMove(Move move)
     {
         if (!IsOutsideBoard(move.GetTargetPoint()))

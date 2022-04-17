@@ -43,7 +43,8 @@ public class MovePlate : MonoBehaviour
 
         piece.SetXBoard(xBoard);
         piece.SetYBoard(yBoard);
-        piece.SetCoords();
+        //piece.SetCoords();
+        piece.MoveToTarget();
 
         controller.GetComponent<Game>().SetPosition(reference);
 

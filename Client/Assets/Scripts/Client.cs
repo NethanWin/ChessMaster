@@ -46,11 +46,10 @@ public class Client : MonoBehaviour
         socket.Close();
     }
     public void SendBoard()
-    {
-        Debug.Log(game.GetBoard());
+    { 
         SendMsg(game.GetBoard());
     }
-    public void SendMsg(string msg)
+    private void SendMsg(string msg)
     {
         try
         {
@@ -84,7 +83,6 @@ public class Client : MonoBehaviour
                 int bytesRec = socket.Receive(bytes);
                 string fen = Encoding.ASCII.GetString(bytes);
                 fen = CleanString(fen);
-                Debug.Log("recived len" + fen.Length);
                 if (fen != "")
                 {
                     game.BuildBoard(fen);

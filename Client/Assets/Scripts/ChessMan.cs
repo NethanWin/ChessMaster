@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class ChessMan : MonoBehaviour
 {
+    static float speed = 0.03f;
+
+
+    static float mulUnity = 0.9f;
+    static float addUnity = -3.15f;
+
     // References
     public GameObject controller;
     public GameObject movePlate;
@@ -11,6 +17,16 @@ public class ChessMan : MonoBehaviour
     // Positions
     private int xBoard = -1;
     private int yBoard = -1;
+    private float currentX;
+    private float currentY;
+
+    private float targetXBoard;
+    private float targetYBoard;
+
+    private bool isMoving = false;
+    
+    private float dx = 0;
+    private float dy = 0;
 
     // Variable to keep track of white or black player
     private string player;
@@ -18,7 +34,28 @@ public class ChessMan : MonoBehaviour
     // References for the chessPieces sprites
     public Sprite blackQueen, blackKnight, blackBishop, blackKing, blackRook, blackPawn;
     public Sprite whiteQueen, whiteKnight, whiteBishop, whiteKing, whiteRook, whitePawn;
-    
+    private void OnMouseUp()
+    {
+        if (!controller.GetComponent<Game>().IsGameOver() && controller.GetComponent<Game>().GetWhiteTurn() && player == "white")
+        {
+            DestroyMovePlates();
+
+            InitiateMovePlates();
+        }
+
+    }
+    private void Update()
+    {
+        Vector3 pos = this.transform.position;
+        (currentX, currentY) = GetUnityCoords(xBoard, yBoard);
+        if ((pos.x - currentX) * dx > 0 || (pos.y - currentY) * dy > 0)
+            isMoving = false;
+        if (isMoving)
+        {
+            Vector3 currentPos = this.transform.position;
+            this.transform.position = new Vector3(currentPos.x + dx, currentPos.y + dy, -1.0f);
+        }
+    }
     public void Activate()
     {
         controller = GameObject.FindGameObjectWithTag("GameController");
@@ -43,11 +80,35 @@ public class ChessMan : MonoBehaviour
             case "whitePawn": this.GetComponent<SpriteRenderer>().sprite = whitePawn; player = "white"; break;
         }
     }
+    public void MoveToTarget()
+    {
+        isMoving = true;
+        Vector3 currentPos = this.transform.position;
+        float targetX, targetY;
+        (targetX, targetY) = GetUnityCoords(xBoard, yBoard);
+        
+        //set dx and dy
+        float deltaX = targetX - currentPos.x;
+        float deltaY = targetY - currentPos.y;
+        float a = Mathf.Atan2(deltaY, deltaX);
+        dx = speed * Mathf.Cos(a);
+        dy = speed * Mathf.Sin(a);
+    }
+    public static int GetDir(float current, float target)
+    {
+        if (current > target)
+            return -1;
+        if (current < target)
+            return 1;
+        return 0;
+    }
+    private static (float, float) GetUnityCoords(int x, int y) => (x * mulUnity + addUnity, y * mulUnity + addUnity);
     public void SetCoords()
     {
-        float x = xBoard * 0.9f - 3.15f;
-        float y = yBoard * 0.9f - 3.15f;
-
+        //teleports the piece to (xBoard,yBoard)
+        isMoving = false;
+        float x, y;
+        (x, y) = GetUnityCoords(xBoard, yBoard);
         this.transform.position = new Vector3(x, y, -1.0f);
     }
     public int GetXBoard()
@@ -62,23 +123,10 @@ public class ChessMan : MonoBehaviour
     {
         xBoard = x;
     }
-
     public void SetYBoard(int y)
     {
         yBoard = y;
     }
-
-    private void OnMouseUp()
-    {
-        if (!controller.GetComponent<Game>().IsGameOver() && controller.GetComponent<Game>().GetWhiteTurn() && player == "white")
-        {
-            DestroyMovePlates();
-
-            InitiateMovePlates();
-        }
-
-    }
-
     public void DestroyMovePlates()
     {
         GameObject[] movePlates = GameObject.FindGameObjectsWithTag("MovePlate");
@@ -223,8 +271,8 @@ public class ChessMan : MonoBehaviour
     {
         /*float x = matrixX;
         float y = matrixY;*/
-        float x = matrixX * 0.9f - 3.15f;
-        float y = matrixY * 0.9f - 3.15f;
+        float x = matrixX * mulUnity + addUnity;
+        float y = matrixY * mulUnity + addUnity;
         //to do
         /*
         x *= 0.66f;
@@ -241,8 +289,8 @@ public class ChessMan : MonoBehaviour
     }
     public void MovePlateAttackSpawn(int matrixX, int matrixY)
     {
-        float x = matrixX * 0.9f - 3.15f;
-        float y = matrixY * 0.9f - 3.15f;
+        float x = matrixX * mulUnity + addUnity;
+        float y = matrixY * mulUnity + addUnity;
 
         //to do
         /*

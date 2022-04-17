@@ -207,4 +207,26 @@ public class Game : MonoBehaviour
         GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().text = playerWinner + " is the winner!";
         GameObject.FindGameObjectWithTag("RestartText").GetComponent<Text>().enabled = true;
     }
+    public bool MakeMove(Move m)
+    {
+        //returns if successful
+        try
+        {
+
+            GameObject pieceRefrence = GetPosition(m.GetStartPoint().x, m.GetStartPoint().y);
+            ChessMan piece = pieceRefrence.GetComponent<ChessMan>();
+            SetPositionEmpty(piece.GetXBoard(), piece.GetYBoard());
+            piece.SetXBoard(m.GetTargetPoint().x);
+            piece.SetYBoard(m.GetTargetPoint().y);
+            //piece.SetCoords();
+            piece.MoveToTarget();
+            SetPosition(pieceRefrence);
+            //piece.DestroyMovePlates();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }

@@ -46,6 +46,7 @@ class Program
             id++;
         }
     }
+
     private static void RemoveFinishedThreads(List<Thread> threads)
     {
         List<Thread> deleteThreads = new List<Thread>();
@@ -61,6 +62,7 @@ class Program
     }
     public static void HandleClient(Socket clientSocket)
     {
+        Board board = new Board();
         try
         {
             //handle sockets for each client
@@ -77,12 +79,7 @@ class Program
                     data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
                     Console.WriteLine("{0}: {1}", Thread.CurrentThread.Name, data);
 
-                    //testing time
-                    Board recivedBoard = new Board(data);
-                    Ai.Minmax(recivedBoard, 2, true, true);
-                    Board chosenBoard = recivedBoard.GetNextGenBoards(true)[0];
-
-                    msg = Encoding.ASCII.GetBytes(chosenBoard.GetFen());
+                    msg = Encoding.ASCII.GetBytes(AnalizingMsg(data, board));
                     clientSocket.Send(msg);
                 }
                 Thread.Sleep(100);
@@ -96,7 +93,33 @@ class Program
         }
         Console.WriteLine("close");
     }
+    private static string AnalizingMsg(string msg, Board board)
+    {
+        try
+        {
+            string[] arr = msg.Split('_');
+            if (arr[0] == "1")
+            {
+                //testing time
+                //Board recivedBoard = new Board(arr[1]);
+                //Ai.Minmax(recivedBoard, 2, true, true);
+                //Board chosenBoard = recivedBoard.GetNextGenBoards(true)[0];
 
+                //return chosenBoard.GetFen();
+                Move m = new Move(arr[1], arr[2]);
+                board.MakeMove(m);
+                Ai.Minmax(board, 2, true, true);
+                List<Move> moves = board.GenerateMoves(true);
+                board.MakeMove(moves[0]);
+                return "1_" + moves[0].ToString();
+            }
+            return "11_msg not in format";
+        }
+        catch
+        {
+            return "11_disconected because timeout";
+        }
+    }
     //Testing
     public static void MinmaxPerformanceTest()
     {
@@ -111,28 +134,5 @@ class Program
     {
         Board b = new Board("8/pppp4/8/8/8/8/8/8");
         Console.WriteLine(b.EvaluateBoard(true));
-    }
-
-
-    private static char GetCharFromPType(string name)
-    {
-        string piece = name.Substring(5, name.Length - 5);
-        char ch = (char)0;
-        if (name.StartsWith("white"))
-            ch = (char)(ch + 'A' - 'a');
-        switch (piece)
-        {
-            case "King": return (char)(ch + 'k');
-            case "Queen": return (char)(ch + 'q');
-            case "Bishop": return (char)(ch + 'b');
-            case "Knight": return (char)(ch + 'n');
-            case "Rook": return (char)(ch + 'r');
-            case "Pawn": return (char)(ch + 'p');
-        }
-        return ch;
-    }
-    public static void TestPType()
-    {
-        Console.WriteLine(GetCharFromPType("whitePawn"));
     }
 }

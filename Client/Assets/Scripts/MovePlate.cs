@@ -5,7 +5,6 @@ using UnityEngine;
 public class MovePlate : MonoBehaviour
 {
     public GameObject controller;
-
     GameObject reference = null;
 
     //board pos
@@ -41,17 +40,18 @@ public class MovePlate : MonoBehaviour
         //set empty in the old piece's board
         controller.GetComponent<Game>().SetPositionEmpty(piece.GetXBoard(),piece.GetYBoard());
 
+        controller.GetComponent<Client>().SendMsg(string.Format("1_{0},{1}_{2},{3}", piece.GetXBoard(), piece.GetYBoard(), xBoard, yBoard));
+
         piece.SetXBoard(xBoard);
         piece.SetYBoard(yBoard);
         //piece.SetCoords();
         piece.MoveToTarget();
 
         controller.GetComponent<Game>().SetPosition(reference);
-
         controller.GetComponent<Game>().NextTurn();
 
         piece.DestroyMovePlates();
-        controller.GetComponent<Client>().SendBoard();
+        
     }
     public void SetCoords(int x, int y)
     {

@@ -177,7 +177,7 @@ class Board
     {
         if (!IsOutsideBoard(move.GetTargetPoint()))
         {
-            Piece piece = board[move.GetstartPoint().x, move.GetstartPoint().y];
+            Piece piece = board[move.GetStartPoint().x, move.GetStartPoint().y];
             Piece target = board[move.GetTargetPoint().x, move.GetTargetPoint().y];
             if (target != null)
             {
@@ -188,7 +188,7 @@ class Board
             }
             piece.setPos(move.GetTargetPoint());
             SetPiece(piece, move.GetTargetPoint());
-            SetPiece(null, move.GetstartPoint());
+            SetPiece(null, move.GetStartPoint());
         }
         return !IsOutsideBoard(move.GetTargetPoint());
     }

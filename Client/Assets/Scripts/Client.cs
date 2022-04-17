@@ -46,10 +46,10 @@ public class Client : MonoBehaviour
         socket.Close();
     }
     public void SendBoard()
-    { 
+    {
         SendMsg(game.GetBoard());
     }
-    private void SendMsg(string msg)
+    public void SendMsg(string msg)
     {
         try
         {
@@ -81,15 +81,35 @@ public class Client : MonoBehaviour
             {
                 // Receive the response from the remote device.
                 int bytesRec = socket.Receive(bytes);
-                string fen = Encoding.ASCII.GetString(bytes);
-                fen = CleanString(fen);
-                if (fen != "")
+                string str = Encoding.ASCII.GetString(bytes);
+                str = CleanString(str);
+                if (str != "")
                 {
-                    game.BuildBoard(fen);
-                    waitForServer = false;
+                    HandleResponse(str);
+                    //game.BuildBoard(fen);
                     game.NextTurn();
+                    waitForServer = false;
                 }
             }
             catch (Exception) { }
+    }
+    public bool HandleResponse(string str)
+    {
+        //returns if succusful
+        try
+        {
+            string[] arr = str.Split('_');
+            if (arr[0] == "1")
+            {
+                Move m = new Move(arr[1], arr[2]);
+                game.MakeMove(m);
+                return true;
+            }
+            return false;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

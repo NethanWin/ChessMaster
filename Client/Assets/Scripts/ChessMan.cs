@@ -39,7 +39,6 @@ public class ChessMan : MonoBehaviour
         if (!controller.GetComponent<Game>().IsGameOver() && controller.GetComponent<Game>().GetWhiteTurn() && player == "white")
         {
             DestroyMovePlates();
-
             InitiateMovePlates();
         }
 
@@ -94,15 +93,7 @@ public class ChessMan : MonoBehaviour
         dx = speed * Mathf.Cos(a);
         dy = speed * Mathf.Sin(a);
     }
-    public static int GetDir(float current, float target)
-    {
-        if (current > target)
-            return -1;
-        if (current < target)
-            return 1;
-        return 0;
-    }
-    private static (float, float) GetUnityCoords(int x, int y) => (x * mulUnity + addUnity, y * mulUnity + addUnity);
+    public static (float, float) GetUnityCoords(int x, int y) => (x * mulUnity + addUnity, y * mulUnity + addUnity);
     public void SetCoords()
     {
         //teleports the piece to (xBoard,yBoard)

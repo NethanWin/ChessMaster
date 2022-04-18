@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class ChessMan : MonoBehaviour
 {
-    static float speed = 0.03f;
-
-
     static float mulUnity = 0.9f;
     static float addUnity = -3.15f;
 
@@ -20,13 +17,12 @@ public class ChessMan : MonoBehaviour
     private float currentX;
     private float currentY;
 
-    private float targetXBoard;
-    private float targetYBoard;
-
+    //movment animation
     private bool isMoving = false;
     
     private float dx = 0;
     private float dy = 0;
+    static float baseSpeed = 0.03f;
 
     // Variable to keep track of white or black player
     private string player;
@@ -90,8 +86,8 @@ public class ChessMan : MonoBehaviour
         float deltaX = targetX - currentPos.x;
         float deltaY = targetY - currentPos.y;
         float a = Mathf.Atan2(deltaY, deltaX);
-        dx = speed * Mathf.Cos(a);
-        dy = speed * Mathf.Sin(a);
+        dx = baseSpeed * Mathf.Cos(a);
+        dy = baseSpeed * Mathf.Sin(a);
     }
     public static (float, float) GetUnityCoords(int x, int y) => (x * mulUnity + addUnity, y * mulUnity + addUnity);
     public void SetCoords()

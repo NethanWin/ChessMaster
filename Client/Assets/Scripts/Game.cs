@@ -68,15 +68,10 @@ public class Game : MonoBehaviour
                 string name; bool isBlack;
                 (name, isBlack) = GetPTypeFromChar(ch);
                 if (isBlack)
-                {
                     name = "black" + name;
-                    SetPosition(Create(name, x, y));
-                }
                 else
-                {
                     name = "white" + name;
-                    SetPosition(Create(name, x, y));
-                }
+                SetPosition(Create(name, new Point(x, y)));
                 x++;
             }
         }
@@ -127,7 +122,9 @@ public class Game : MonoBehaviour
     }
     void Start()
     {
-        GameObject[] playerWhite = new GameObject[] { Create("whiteRook", 0, 0), Create("whiteKnight", 1, 0),
+        BuildBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        //SetPosition(Create("whiteBishop", new Point(5, 2)));
+        /*GameObject[] playerWhite = new GameObject[] { Create("whiteRook", 0, 0), Create("whiteKnight", 1, 0),
             Create("whiteBishop", 2, 0), Create("whiteQueen", 3, 0), Create("whiteKing", 4, 0),
             Create("whiteBishop", 5, 0), Create("whiteKnight", 6, 0), Create("whiteRook", 7, 0),
             Create("whitePawn", 0, 1), Create("whitePawn", 1, 1), Create("whitePawn", 2, 1),
@@ -146,52 +143,53 @@ public class Game : MonoBehaviour
         {
             SetPosition(playerBlack[i]);
             SetPosition(playerWhite[i]);
-        }
-
+        }*/
     }
     public void Update()
     {
         if (gameOver == true && Input.GetMouseButtonDown(0))
         {
             gameOver = false;
-
             SceneManager.LoadScene("Game");
         }
     }
-    public GameObject Create(string name, int x, int y)
+    public GameObject Create(string name, Point p)
     {
-        GameObject obj = Instantiate(chesspiece, new Vector3(0, 0, -1), Quaternion.identity);
-        ChessMan cm = obj.GetComponent<ChessMan>();
-        cm.name = name;
-        cm.SetXBoard(x);
-        cm.SetYBoard(y);
-        cm.Activate();
+        GameObject obj = Instantiate(chesspiece, new Vector3(0, 0, -2f), Quaternion.identity);
+        Piece piece = obj.GetComponent<Piece>();
+        piece.name = name;
+        piece.SetPBoard(p);
+        piece.Activate();
         return obj;
     }
     public void SetPosition(GameObject obj)
     {
-        ChessMan cm = obj.GetComponent<ChessMan>();
+        Piece piece = obj.GetComponent<Piece>();
+        board[(int)piece.GetPBoard().x, (int)piece.GetPBoard().y] = obj;
+    }
+    public void SetEmptyPosition(Point p)
+    {
+        board[(int)p.x, (int)p.y] = null;
+    }
+    public void DestroyAllMovePlates()
+    {
+        //Destroy all the MovePlates on the screen
+        GameObject[] movePlates = GameObject.FindGameObjectsWithTag("MovePlate");
+        for (int i = 0; i < movePlates.Length; i++)
+            Destroy(movePlates[i]);
+    }
+    public GameObject GetGameObjectOnPosition(Point p)
+    {
+        return board[(int)p.x, (int)p.y];
+    }
 
-        board[cm.GetXBoard(), cm.GetYBoard()] = obj;
-    }
-    public void SetPositionEmpty(int x, int y)
-    {
-        board[x, y] = null;
-    }
-    public GameObject GetPosition(int x, int y)
-    {
-        return board[x, y];
-    }
     //is a postion on the board
-    public bool IsPositionOnBoard(int x, int y)
+    public bool IsPositionOnBoard(Point p)
     {
-        return !(x < 0 || y < 0 || x >= board.GetLength(0) || y >= board.GetLength(1));
+        return !(p.x < 0 || p.y < 0 || p.x >= board.GetLength(0) || p.y >= board.GetLength(1));
     }
     public bool GetWhiteTurn() => whiteTurn;
-    public bool IsGameOver()
-    {
-        return gameOver;
-    }
+    public bool IsGameOver() => gameOver;
     public void NextTurn()
     {
         if (whiteTurn)
@@ -213,12 +211,10 @@ public class Game : MonoBehaviour
         try
         {
 
-            GameObject pieceRefrence = GetPosition(m.GetStartPoint().x, m.GetStartPoint().y);
-            ChessMan piece = pieceRefrence.GetComponent<ChessMan>();
-            SetPositionEmpty(piece.GetXBoard(), piece.GetYBoard());
-            piece.SetXBoard(m.GetTargetPoint().x);
-            piece.SetYBoard(m.GetTargetPoint().y);
-            //piece.SetCoords();
+            GameObject pieceRefrence = GetGameObjectOnPosition(m.GetStartPoint());
+            Piece piece = pieceRefrence.GetComponent<Piece>();
+            SetEmptyPosition(piece.GetPBoard());
+            piece.SetPBoard(new Point(m.GetTargetPoint()));
             piece.MoveToTarget();
             SetPosition(pieceRefrence);
             //piece.DestroyMovePlates();

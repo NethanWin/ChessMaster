@@ -86,7 +86,6 @@ public class Client : MonoBehaviour
                 if (str != "")
                 {
                     HandleResponse(str);
-                    //game.BuildBoard(fen);
                     game.NextTurn();
                     waitForServer = false;
                 }

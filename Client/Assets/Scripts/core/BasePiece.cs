@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public enum PType { King, Queen, Rook, Bishop, Knight, Pawn };
 
-class Piece
+class BasePiece
 {
     private Point currentPos;
     private List<Move> moves;
@@ -15,7 +15,7 @@ class Piece
     private bool isBlack;
     private bool isFirstMove;
 
-    public Piece(PType type, bool isBlack, Point initPoint) 
+    public BasePiece(PType type, bool isBlack, Point initPoint) 
     {
         moves = new List<Move>();
         this.currentPos = initPoint;
@@ -116,7 +116,7 @@ class Piece
     private Move GetMoveReletive(int x, int y)
     {
         //movement reletive to the currentPos
-        return GetMove(currentPos.x + x, currentPos.y + y);
+        return GetMove((int)currentPos.x + x, (int)currentPos.y + y);
     }
     private Move GetMove(int x, int y)
     {
@@ -125,8 +125,8 @@ class Piece
     private void UpdateMoveLine(Board board, int dx, int dy)
     {
         //adds raw moves for a line (dx and dy is the direction of the line)
-        int x = currentPos.x + dx;
-        int y = currentPos.y + dy;
+        int x = (int)currentPos.x + dx;
+        int y = (int)currentPos.y + dy;
         for (;!board.IsOutsideBoard(new Point(x, y)); x += dx, y += dy)
         {
             moves.Add(GetMove(x, y));
@@ -135,8 +135,8 @@ class Piece
         }
     }
 
-    public int GetX() => currentPos.x;
-    public int GetY() => currentPos.y;
+    public int GetX() => (int)currentPos.x;
+    public int GetY() => (int)currentPos.y;
     public bool GetIsBlack() => isBlack;
     public char GetPieceType()
     {

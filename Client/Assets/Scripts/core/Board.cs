@@ -6,47 +6,47 @@ using System.Threading.Tasks;
 
 class Board
 {
-    private Piece[,] board;
-    private List<Piece> blackPieces;
-    private List<Piece> whitePieces;
+    private BasePiece[,] board;
+    private List<BasePiece> blackBasicPieces;
+    private List<BasePiece> whiteBasicPieces;
     private int turn;
 
     public Board()
     {
-        board = new Piece[8,8];
-        blackPieces = new List<Piece>();
-        whitePieces = new List<Piece>();
+        board = new BasePiece[8,8];
+        blackBasicPieces = new List<BasePiece>();
+        whiteBasicPieces = new List<BasePiece>();
         turn = 0;
-        AddToBoard(new Piece(PType.Rook, false, new Point(0,0)));
-        AddToBoard(new Piece(PType.Knight, false, new Point(1,0)));
-        AddToBoard(new Piece(PType.Bishop, false, new Point(2,0)));
-        AddToBoard(new Piece(PType.King, false, new Point(3,0)));
-        AddToBoard(new Piece(PType.Queen, false, new Point(4,0)));
-        AddToBoard(new Piece(PType.Bishop, false, new Point(5,0)));
-        AddToBoard(new Piece(PType.Knight, false, new Point(6,0)));
-        AddToBoard(new Piece(PType.Rook, false, new Point(7,0)));
+        AddToBoard(new BasePiece(PType.Rook, false, new Point(0,0)));
+        AddToBoard(new BasePiece(PType.Knight, false, new Point(1,0)));
+        AddToBoard(new BasePiece(PType.Bishop, false, new Point(2,0)));
+        AddToBoard(new BasePiece(PType.King, false, new Point(3,0)));
+        AddToBoard(new BasePiece(PType.Queen, false, new Point(4,0)));
+        AddToBoard(new BasePiece(PType.Bishop, false, new Point(5,0)));
+        AddToBoard(new BasePiece(PType.Knight, false, new Point(6,0)));
+        AddToBoard(new BasePiece(PType.Rook, false, new Point(7,0)));
 
-        AddToBoard(new Piece(PType.Rook, true, new Point(0, 7)));
-        AddToBoard(new Piece(PType.Knight, true, new Point(1, 7)));
-        AddToBoard(new Piece(PType.Bishop, true, new Point(2, 7)));
-        AddToBoard(new Piece(PType.Queen, true, new Point(3, 7)));
-        AddToBoard(new Piece(PType.King, true, new Point(4, 7)));
-        AddToBoard(new Piece(PType.Bishop, true, new Point(5, 7)));
-        AddToBoard(new Piece(PType.Knight, true, new Point(6, 7)));
-        AddToBoard(new Piece(PType.Rook, true, new Point(7, 7)));
+        AddToBoard(new BasePiece(PType.Rook, true, new Point(0, 7)));
+        AddToBoard(new BasePiece(PType.Knight, true, new Point(1, 7)));
+        AddToBoard(new BasePiece(PType.Bishop, true, new Point(2, 7)));
+        AddToBoard(new BasePiece(PType.Queen, true, new Point(3, 7)));
+        AddToBoard(new BasePiece(PType.King, true, new Point(4, 7)));
+        AddToBoard(new BasePiece(PType.Bishop, true, new Point(5, 7)));
+        AddToBoard(new BasePiece(PType.Knight, true, new Point(6, 7)));
+        AddToBoard(new BasePiece(PType.Rook, true, new Point(7, 7)));
 
 
         for (int i = 0; i < 8; i++)
         {
-            AddToBoard(new Piece(PType.Pawn, false, new Point(i, 1)));
-            AddToBoard(new Piece(PType.Pawn, true, new Point(i, 6)));
+            AddToBoard(new BasePiece(PType.Pawn, false, new Point(i, 1)));
+            AddToBoard(new BasePiece(PType.Pawn, true, new Point(i, 6)));
         }
     }
     public Board(string fen)
     {
-        board = new Piece[8, 8];
-        blackPieces = new List<Piece>();
-        whitePieces = new List<Piece>();
+        board = new BasePiece[8, 8];
+        blackBasicPieces = new List<BasePiece>();
+        whiteBasicPieces = new List<BasePiece>();
 
 
 
@@ -67,12 +67,11 @@ class Board
             {
                 PType pType; bool isBlack;
                 (pType,isBlack) = GetPTypeFromChar(ch);
-                AddToBoard(new Piece(pType, isBlack, new Point(x, y)));
+                AddToBoard(new BasePiece(pType, isBlack, new Point(x, y)));
                 x++;
             }
         }
     }
-
     private (PType, bool) GetPTypeFromChar(char ch)
     {
         //(PType, isBlack)
@@ -100,32 +99,32 @@ class Board
                 return (PType.Pawn, isBlack);
         }
     }
-    public void AddToBoard(Piece piece)
+    public void AddToBoard(BasePiece BasicPiece)
     {
-        board[piece.GetX(), piece.GetY()] = piece;
-        if (piece.GetIsBlack())
-            blackPieces.Add(piece);
+        board[BasicPiece.GetX(), BasicPiece.GetY()] = BasicPiece;
+        if (BasicPiece.GetIsBlack())
+            blackBasicPieces.Add(BasicPiece);
         else
-            whitePieces.Add(piece);
+            whiteBasicPieces.Add(BasicPiece);
     }
     public bool IsOutsideBoard(Point p)
     {
         return p.x >= board.GetLength(0) || p.x < 0 || p.y >= board.GetLength(1) || p.y < 0;
     }
-    public Piece GetPiece(Point p)
+    public BasePiece GetBasicPiece(Point p)
     {
         if (p != null && !IsOutsideBoard(p))
-            return board[p.x, p.y];
+            return board[(int)p.x, (int)p.y];
         return null;
     }
-    public void SetPiece(Piece piece, Point p)
+    public void SetBasicPiece(BasePiece BasicPiece, Point p)
     {
         if (p != null && !IsOutsideBoard(p))
-            board[p.x, p.y] = piece;
+            board[(int)p.x, (int)p.y] = BasicPiece;
     }
     public bool IsAllyOnPoint(Point targetP, bool isBlack)
     {
-        return GetPiece(targetP) != null && GetPiece(targetP).GetIsBlack() == isBlack;
+        return GetBasicPiece(targetP) != null && GetBasicPiece(targetP).GetIsBlack() == isBlack;
     }
     public string GetFen()
     {
@@ -157,18 +156,18 @@ class Board
     public List<Move> GenerateMoves(bool isBlack)
     {
         List<Move> moves = new List<Move>();
-        List<Piece> pieces;
+        List<BasePiece> BasicPieces;
         if (isBlack)
-            pieces = blackPieces;
+            BasicPieces = blackBasicPieces;
         else
-            pieces = whitePieces;
+            BasicPieces = whiteBasicPieces;
 
-        foreach (Piece piece in pieces)
+        foreach (BasePiece BasicPiece in BasicPieces)
         {
             //temperey (shoud be done automaticly)
-            piece.UpdateMoves(this);
+            BasicPiece.UpdateMoves(this);
 
-            moves.AddRange(piece.GetMoves());
+            moves.AddRange(BasicPiece.GetMoves());
         }
         return moves;
     }
@@ -177,18 +176,18 @@ class Board
     {
         if (!IsOutsideBoard(move.GetTargetPoint()))
         {
-            Piece piece = board[move.GetStartPoint().x, move.GetStartPoint().y];
-            Piece target = board[move.GetTargetPoint().x, move.GetTargetPoint().y];
+            BasePiece BasicPiece = board[(int)move.GetStartPoint().x, (int)move.GetStartPoint().y];
+            BasePiece target = board[(int)move.GetTargetPoint().x, (int)move.GetTargetPoint().y];
             if (target != null)
             {
                 if (target.GetIsBlack())
-                    blackPieces.Remove(target);
+                    blackBasicPieces.Remove(target);
                 else
-                    whitePieces.Remove(target);
+                    whiteBasicPieces.Remove(target);
             }
-            piece.setPos(move.GetTargetPoint());
-            SetPiece(piece, move.GetTargetPoint());
-            SetPiece(null, move.GetStartPoint());
+            BasicPiece.setPos(move.GetTargetPoint());
+            SetBasicPiece(BasicPiece, move.GetTargetPoint());
+            SetBasicPiece(null, move.GetStartPoint());
         }
         return !IsOutsideBoard(move.GetTargetPoint());
     }

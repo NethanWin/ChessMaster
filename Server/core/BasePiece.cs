@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public enum PType { King, Queen, Rook, Bishop, Knight, Pawn };
 
-class Piece
+class BasePiece
 {
     private Point currentPos;
     private List<Move> moves;
@@ -15,7 +15,7 @@ class Piece
     private bool isBlack;
     private bool isFirstMove;
 
-    public Piece(PType type, bool isBlack, Point initPoint) 
+    public BasePiece(PType type, bool isBlack, Point initPoint) 
     {
         moves = new List<Move>();
         this.currentPos = initPoint;

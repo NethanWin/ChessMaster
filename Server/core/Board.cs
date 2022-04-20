@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 class Board
 {
-    private Piece[,] board;
-    private List<Piece> blackPieces;
-    private List<Piece> whitePieces;
+    private BasePiece[,] board;
+    private List<BasePiece> blackPieces;
+    private List<BasePiece> whitePieces;
     private static sbyte[,] pawn =
     {
         { 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -89,39 +89,39 @@ class Board
     -50,-30,-30,-30,-30,-30,-30,-50*/
     public Board()
     {
-        board = new Piece[8,8];
-        blackPieces = new List<Piece>();
-        whitePieces = new List<Piece>();
-        AddToBoard(new Piece(PType.Rook, false, new Point(0,0)));
-        AddToBoard(new Piece(PType.Knight, false, new Point(1,0)));
-        AddToBoard(new Piece(PType.Bishop, false, new Point(2,0)));
-        AddToBoard(new Piece(PType.King, false, new Point(3,0)));
-        AddToBoard(new Piece(PType.Queen, false, new Point(4,0)));
-        AddToBoard(new Piece(PType.Bishop, false, new Point(5,0)));
-        AddToBoard(new Piece(PType.Knight, false, new Point(6,0)));
-        AddToBoard(new Piece(PType.Rook, false, new Point(7,0)));
+        board = new BasePiece[8,8];
+        blackPieces = new List<BasePiece>();
+        whitePieces = new List<BasePiece>();
+        AddToBoard(new BasePiece(PType.Rook, false, new Point(0,0)));
+        AddToBoard(new BasePiece(PType.Knight, false, new Point(1,0)));
+        AddToBoard(new BasePiece(PType.Bishop, false, new Point(2,0)));
+        AddToBoard(new BasePiece(PType.King, false, new Point(3,0)));
+        AddToBoard(new BasePiece(PType.Queen, false, new Point(4,0)));
+        AddToBoard(new BasePiece(PType.Bishop, false, new Point(5,0)));
+        AddToBoard(new BasePiece(PType.Knight, false, new Point(6,0)));
+        AddToBoard(new BasePiece(PType.Rook, false, new Point(7,0)));
 
-        AddToBoard(new Piece(PType.Rook, true, new Point(0, 7)));
-        AddToBoard(new Piece(PType.Knight, true, new Point(1, 7)));
-        AddToBoard(new Piece(PType.Bishop, true, new Point(2, 7)));
-        AddToBoard(new Piece(PType.Queen, true, new Point(3, 7)));
-        AddToBoard(new Piece(PType.King, true, new Point(4, 7)));
-        AddToBoard(new Piece(PType.Bishop, true, new Point(5, 7)));
-        AddToBoard(new Piece(PType.Knight, true, new Point(6, 7)));
-        AddToBoard(new Piece(PType.Rook, true, new Point(7, 7)));
+        AddToBoard(new BasePiece(PType.Rook, true, new Point(0, 7)));
+        AddToBoard(new BasePiece(PType.Knight, true, new Point(1, 7)));
+        AddToBoard(new BasePiece(PType.Bishop, true, new Point(2, 7)));
+        AddToBoard(new BasePiece(PType.Queen, true, new Point(3, 7)));
+        AddToBoard(new BasePiece(PType.King, true, new Point(4, 7)));
+        AddToBoard(new BasePiece(PType.Bishop, true, new Point(5, 7)));
+        AddToBoard(new BasePiece(PType.Knight, true, new Point(6, 7)));
+        AddToBoard(new BasePiece(PType.Rook, true, new Point(7, 7)));
 
 
         for (byte i = 0; i < 8; i++)
         {
-            AddToBoard(new Piece(PType.Pawn, false, new Point(i, 1)));
-            AddToBoard(new Piece(PType.Pawn, true, new Point(i, 6)));
+            AddToBoard(new BasePiece(PType.Pawn, false, new Point(i, 1)));
+            AddToBoard(new BasePiece(PType.Pawn, true, new Point(i, 6)));
         }
     }
     public Board(string fen)
     {
-        board = new Piece[8, 8];
-        blackPieces = new List<Piece>();
-        whitePieces = new List<Piece>();
+        board = new BasePiece[8, 8];
+        blackPieces = new List<BasePiece>();
+        whitePieces = new List<BasePiece>();
 
         byte y = (byte)(board.GetLength(0) - 1);
         byte x = 0;
@@ -140,12 +140,12 @@ class Board
             {
                 PType pType; bool isBlack;
                 (pType, isBlack) = GetPTypeFromChar(ch);
-                AddToBoard(new Piece(pType, isBlack, new Point(x, y)));
+                AddToBoard(new BasePiece(pType, isBlack, new Point(x, y)));
                 x++;
             }
         }
     }
-    internal Int16 EvaluatePiece(bool whiteToPlay, Piece p, byte x, byte y)
+    internal Int16 EvaluatePiece(bool whiteToPlay, BasePiece p, byte x, byte y)
     {
         //returns the value of a piece acording to it's position
         PType type = p.GetPType();
@@ -166,7 +166,7 @@ class Board
     {
         //evaluate the points for the board
         Int16 count = 0;
-        foreach (Piece p in board)
+        foreach (BasePiece p in board)
             if (p != null)
                 count += EvaluatePiece(whiteToPlay, p, p.GetX(), p.GetY());
         return count;
@@ -198,7 +198,7 @@ class Board
                 return (PType.Pawn, isBlack);
         }
     }
-    public void AddToBoard(Piece piece)
+    public void AddToBoard(BasePiece piece)
     {
         board[piece.GetX(), piece.GetY()] = piece;
         if (piece.GetIsBlack())
@@ -210,13 +210,13 @@ class Board
     {
         return p.x >= board.GetLength(0) || p.x < 0 || p.y >= board.GetLength(1) || p.y < 0;
     }
-    public Piece GetPiece(Point p)
+    public BasePiece GetPiece(Point p)
     {
         if (p != null && !IsOutsideBoard(p))
             return board[p.x, p.y];
         return null;
     }
-    public void SetPiece(Piece piece, Point p)
+    public void SetPiece(BasePiece piece, Point p)
     {
         if (p != null && !IsOutsideBoard(p))
             board[p.x, p.y] = piece;
@@ -255,17 +255,16 @@ class Board
     public List<Move> GenerateMoves(bool isBlack)
     {
         List<Move> moves = new List<Move>();
-        List<Piece> pieces;
+        List<BasePiece> pieces;
         if (isBlack)
             pieces = blackPieces;
         else
             pieces = whitePieces;
 
-        foreach (Piece piece in pieces)
+        foreach (BasePiece piece in pieces)
         {
             //temperey (shoud be done automaticly)
             piece.UpdateMoves(this);
-
             moves.AddRange(piece.GetMoves());
         }
         return moves;
@@ -274,8 +273,8 @@ class Board
     {
         if (!IsOutsideBoard(move.GetTargetPoint()))
         {
-            Piece piece = board[move.GetStartPoint().x, move.GetStartPoint().y];
-            Piece target = board[move.GetTargetPoint().x, move.GetTargetPoint().y];
+            BasePiece piece = board[move.GetStartPoint().x, move.GetStartPoint().y];
+            BasePiece target = board[move.GetTargetPoint().x, move.GetTargetPoint().y];
             if (target != null)
             {
                 if (target.GetIsBlack())

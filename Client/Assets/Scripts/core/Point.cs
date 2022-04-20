@@ -1,9 +1,8 @@
 ﻿public class Point
 {
-    public int x;
-    public int y;
-
-    public Point(int x, int y)
+    public float x;
+    public float y;
+    public Point(float x, float y)
     {
         this.x = x;
         this.y = y;
@@ -15,8 +14,10 @@
         this.x = (byte)float.Parse(arr[0]);
         this.y = (byte)float.Parse(arr[1]);
     }
-    public override string ToString()
+    public Point(Point p)
     {
-        return x + ", " + y;
+        x = p.x;
+        y = p.y;
     }
+    public override string ToString() => x + ", " + y;
 }

@@ -62,9 +62,9 @@
     <Compile Include="Assets\Scripts\core\Program.cs" />
     <Compile Include="Assets\Scripts\MovePlate.cs" />
     <Compile Include="Assets\Scripts\core\Point.cs" />
-    <Compile Include="Assets\Scripts\ChessMan.cs" />
+    <Compile Include="Assets\Scripts\Piece.cs" />
     <Compile Include="Assets\Scripts\Game.cs" />
-    <Compile Include="Assets\Scripts\core\Piece.cs" />
+    <Compile Include="Assets\Scripts\core\BasePiece.cs" />
     <Compile Include="Assets\Scripts\core\Board.cs" />
   </ItemGroup>
   <ItemGroup>

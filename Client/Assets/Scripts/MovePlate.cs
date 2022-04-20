@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class MovePlate : MonoBehaviour
 {
-    public GameObject controller;
-    GameObject reference = null;
+    GameObject controller;
+    GameObject pieceObject = null;
+    Game game;
 
     //board pos
-    int xBoard;
-    int yBoard;
-
-    public bool attack = false;
+    Point pBoard = new Point(0,0);
+    bool attack = false;
 
     public void Start()
     {
+        controller = GameObject.FindGameObjectWithTag("GameController");
+        game = controller.GetComponent<Game>();
+
         if (attack)
         {
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
@@ -22,48 +24,36 @@ public class MovePlate : MonoBehaviour
     }
     public void OnMouseUp()
     {
-        controller = GameObject.FindGameObjectWithTag("GameController");
-        ChessMan piece = reference.GetComponent<ChessMan>();
-
+        Piece piece = pieceObject.GetComponent<Piece>();
         if (attack)
         {
-            GameObject enemyChessPiece = controller.GetComponent<Game>().GetPosition(xBoard, yBoard);
+            GameObject enemyChessPiece = game.GetGameObjectOnPosition(pBoard);
 
             if (enemyChessPiece.name == "whiteKing")
-                controller.GetComponent<Game>().Winner("black");
+                game.Winner("black");
             if (enemyChessPiece.name == "blackKing")
-                controller.GetComponent<Game>().Winner("white");
+                game.Winner("white");
 
             Destroy(enemyChessPiece);
         }
 
         //set empty in the old piece's board
-        controller.GetComponent<Game>().SetPositionEmpty(piece.GetXBoard(),piece.GetYBoard());
-
-        controller.GetComponent<Client>().SendMsg(string.Format("1_{0},{1}_{2},{3}", piece.GetXBoard(), piece.GetYBoard(), xBoard, yBoard));
-
-        piece.SetXBoard(xBoard);
-        piece.SetYBoard(yBoard);
-        //piece.SetCoords();
+        game.SetEmptyPosition(piece.GetPBoard());
+        controller.GetComponent<Client>().SendMsg(string.Format("1_{0}_{1}", piece.GetPBoard(), pBoard));
+        piece.SetPBoard(new Point(pBoard));
         piece.MoveToTarget();
-
-        controller.GetComponent<Game>().SetPosition(reference);
-        controller.GetComponent<Game>().NextTurn();
-
-        piece.DestroyMovePlates();
-        
+        game.SetPosition(pieceObject);
+        game.NextTurn();
+        game.DestroyAllMovePlates();
     }
-    public void SetCoords(int x, int y)
+    public void SetPoint(Point p)
     {
-        xBoard = x;
-        yBoard = y;
+        pBoard = new Point(p);
     }
-    public void SetRefrence(GameObject obj)
+    public void SetVars(Move m, GameObject go, bool attack)
     {
-        reference = obj;
-    }
-    public GameObject GetReference()
-    {
-        return reference;
+        pBoard = new Point(m.GetTargetPoint());
+        pieceObject = go;
+        this.attack = attack;
     }
 }

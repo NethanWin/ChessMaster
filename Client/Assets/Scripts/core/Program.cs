@@ -8,14 +8,14 @@ class Program
 {
     static void Main(string[] args)
     {
-        Piece piece = new Piece(PType.Pawn, true, new Point(2,2));
+        BasePiece BasePiece = new BasePiece(PType.Pawn, true, new Point(2,2));
         Board board = new Board();
-        board.AddToBoard(piece);
-        //board.AddToBoard(new Piece(PType.Pawn, true, new Point(1, 1)));
+        board.AddToBoard(BasePiece);
+        //board.AddToBoard(new BasePiece(PType.Pawn, true, new Point(1, 1)));
         Console.WriteLine(board.GetFen());
         Console.WriteLine();
-        //piece.UpdateMoves(board);
-        //foreach (Move move in piece.GetMoves())
+        //BasePiece.UpdateMoves(board);
+        //foreach (Move move in BasePiece.GetMoves())
         //  Console.WriteLine(move);
 
         Board oldBoard = new Board(board.GetFen());

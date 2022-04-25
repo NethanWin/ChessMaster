@@ -28,7 +28,7 @@ public class Client : MonoBehaviour
     {
         // Connect to a Remote server
         IPHostEntry host = Dns.GetHostEntry("localhost");
-        IPAddress ipAddress = host.AddressList[0];
+        IPAddress ipAddress = IPAddress.Parse("10.100.102.61");//host.AddressList[0];
         IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
         socket = new Socket(ipAddress.AddressFamily,
             SocketType.Stream, ProtocolType.Tcp);

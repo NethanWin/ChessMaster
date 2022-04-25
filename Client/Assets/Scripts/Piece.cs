@@ -14,6 +14,8 @@ public class Piece : MonoBehaviour
     public GameObject movePlate;
     public Game game;
 
+    BasePiece basePiece;
+
     // Positions
     Point pBoard = new Point(0,0);
     Point currentP;
@@ -50,6 +52,21 @@ public class Piece : MonoBehaviour
             transform.position = new Vector3(currentPos.x + dx, currentPos.y + dy, -1.0f);
         }
     }
+    public static PType GetPType(string name)
+    {
+        //returns the PType for the appropriate piece's name
+        string PName = name.Substring(5, name.Length - 5);
+        switch (PName)
+        {
+            case "King": return PType.King;
+            case "Queen": return PType.Queen;
+            case "Bishop": return PType.Bishop;
+            case "Knight": return PType.Knight;
+            case "Pawn": return PType.Pawn;
+            case "Rook": return PType.Rook;
+        }
+        return PType.Pawn;
+    }
     public void Activate()
     {
         controller = GameObject.FindGameObjectWithTag("GameController");
@@ -58,6 +75,10 @@ public class Piece : MonoBehaviour
 
         string colorStr = name.Substring(0, 5);
         isWhite = colorStr == "white" ? true : false;
+
+        PType type = GetPType(name);
+        
+        basePiece = new BasePiece(type, !isWhite, pBoard);
 
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         switch (name)
@@ -102,56 +123,9 @@ public class Piece : MonoBehaviour
     void InitiateMovePlates()
     {
         //Choose which MovePlate To create
-        switch (this.name)
-        {
-            case "blackQueen":
-            case "whiteQueen":
-                LineMovePlate(1, 0);
-                LineMovePlate(1, -1);
-                LineMovePlate(1, 1);
-                LineMovePlate(0, -1);
-                LineMovePlate(0, 1);
-                LineMovePlate(-1, 0);
-                LineMovePlate(-1, -1);
-                LineMovePlate(-1, 1);
-                break;
-
-            case "blackKnight":
-            case "whiteKnight":
-                LMovePlate();
-                break;
-
-            case "blackBishop":
-            case "whiteBishop":
-                LineMovePlate(1, 1);
-                LineMovePlate(1, -1);
-                LineMovePlate(-1, 1);
-                LineMovePlate(-1, -1);
-                break;
-
-            case "blackKing":
-            case "whiteKing":
-                SurroundMovePlate();
-                break;
-
-            case "blackRook":
-            case "whiteRook":
-                LineMovePlate(1, 0);
-                LineMovePlate(0, 1);
-                LineMovePlate(-1, 0);
-                LineMovePlate(0, -1);
-                break;
-
-            case "blackPawn":
-                PawnMovePlate(new Point(pBoard.x, pBoard.y - 1));
-                break;
-
-            case "whitePawn":
-                PawnMovePlate(new Point(pBoard.x, pBoard.y + 1));
-                break;
-
-
-        }
+        basePiece.UpdateMoves(new Board(game.GetBoard()));
+        foreach (Move m in basePiece.GetMoves())
+            CreateMovePlate(m);
     }
     void CreateMovePlate(Move m)
     {
@@ -185,73 +159,5 @@ public class Piece : MonoBehaviour
         float newX = pBoard.x * mulUnity + addUnity;
         float newY = pBoard.y * mulUnity + addUnity;
         return new Point(newX, newY);
-    }
-
-
-    //to delete after integration with core
-    //
-    //
-    //
-    public void LineMovePlate(int dx, int dy)
-    {
-        Game game = controller.GetComponent<Game>();
-        Point p = new Point(pBoard.x + dx, pBoard.y + dy);
-        while (game.IsPositionOnBoard(p) && game.GetGameObjectOnPosition(p) == null)
-        {
-            CreateMovePlate(new Move(pBoard, p));
-            p.x += dx;
-            p.y += dy;
-        }
-
-        //can attack
-        //if (game.IsPositionOnBoard(x, y) && game.GetPosition(x, y).GetComponent<Piece>().isWhite != isWhite)
-        //{
-          //  MovePlateAttackSpawn(x, y);
-        //}
-    }
-    public void LMovePlate()
-    {
-        CreateMovePlate(new Move(new Point(pBoard), new Point(pBoard.x + 1, pBoard.y + 2)));
-        /*PointMovePlate(xBoard -1, yBoard + 2);
-        PointMovePlate(xBoard + 2, yBoard + 1);
-        PointMovePlate(xBoard + 2, yBoard - 1);
-        PointMovePlate(xBoard + 1, yBoard - 2);
-        PointMovePlate(xBoard - 1, yBoard - 2);
-        PointMovePlate(xBoard - 2, yBoard + 1);
-        PointMovePlate(xBoard - 2, yBoard - 1);*/
-    }
-    public void SurroundMovePlate()
-    {
-        /*PointMovePlate(xBoard, yBoard + 1);
-        PointMovePlate(xBoard, yBoard - 1);
-        PointMovePlate(xBoard + 1, yBoard);
-        PointMovePlate(xBoard - 1, yBoard);
-        PointMovePlate(xBoard + 1, yBoard + 1);
-        PointMovePlate(xBoard + 1, yBoard - 1);
-        PointMovePlate(xBoard - 1, yBoard + 1);
-        PointMovePlate(xBoard - 1, yBoard - 1);*/
-    }
-    void PawnMovePlate(Point p)
-    {
-        //not working
-        Game game = controller.GetComponent<Game>();
-        if (game.IsPositionOnBoard(p))
-        {
-            if (game.GetGameObjectOnPosition(p) == null)
-            {
-                //MovePlateSpawn(x, y);
-            }
-            //if (game.IsPositionOnBoard(x + 1, y) && game.GetPosition(x + 1, y) != null &&
-            //   game.GetPosition(x + 1, y).GetComponent<Piece>().isWhite != isWhite)
-           // {
-           //     MovePlateAttackSpawn(x + 1, y);
-            /*}
-
-            if (game.IsPositionOnBoard(x - 1, y) && game.GetPosition(x - 1, y) != null &&
-                game.GetPosition(x - 1, y).GetComponent<Piece>().isWhite != isWhite)
-            {
-                MovePlateAttackSpawn(x - 1, y);
-            }*/
-        }
     }
 }

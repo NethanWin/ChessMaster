@@ -22,9 +22,7 @@ class Program
     {
         //main command which handles new clients and creates thread for each
         List<Thread> threads = new List<Thread>();
-        Console.WriteLine("server");
-        IPHostEntry host = Dns.GetHostEntry("localhost");
-        IPAddress ipAddress = host.AddressList[0];
+        IPAddress ipAddress = IPAddress.Parse("10.100.102.61");
         IPEndPoint localEndPoint = new IPEndPoint(ipAddress, SERVER_PORT);
         // Create a Socket that will use Tcp protocol
         Socket serverSocket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);

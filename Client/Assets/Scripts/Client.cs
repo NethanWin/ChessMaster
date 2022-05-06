@@ -15,10 +15,12 @@ using UnityEngine.UI;
 // communication is established.
 public class Client : MonoBehaviour
 {
+    static string ipStr;
     int count = 0;
     static bool waitForServer;
     static Socket socket;
     static Game game;
+
     void Start()
     {
         game = GetComponent<Game>();
@@ -27,8 +29,13 @@ public class Client : MonoBehaviour
     public void StartClient()
     {
         // Connect to a Remote server
+        IPManager ipManager = GameObject.Find("IP Manager").GetComponent<IPManager>();
+        ipStr = ipManager.GetIP();
+        ipStr = ipStr.Substring(0, ipStr.Length - 1);
+
         IPHostEntry host = Dns.GetHostEntry("localhost");
-        IPAddress ipAddress = IPAddress.Parse("10.100.102.61");//host.AddressList[0];
+        //IPAddress ipAddress = IPAddress.Parse("192.168.145.1");//("10.100.102.64");//host.AddressList[0];
+        IPAddress ipAddress = IPAddress.Parse(ipStr);
         IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
         socket = new Socket(ipAddress.AddressFamily,
             SocketType.Stream, ProtocolType.Tcp);

@@ -5,9 +5,11 @@ using UnityEngine;
 public class Piece : MonoBehaviour
 {
     //Constants
+    //movment animation
+    bool isMoving = false;
     static float mulUnity = 0.9f;
     static float addUnity = -3.15f;
-    static float baseSpeed = 0.03f;
+    static float baseSpeed = 5f;
 
     // References
     public GameObject controller;
@@ -20,10 +22,7 @@ public class Piece : MonoBehaviour
     Point pBoard = new Point(0,0);
     Point currentP;
 
-    //movment animation
-    bool isMoving = false;
-    float dx;
-    float dy;
+
     
     // Variable to keep track of white or black isWhite
     bool isWhite;
@@ -31,6 +30,7 @@ public class Piece : MonoBehaviour
     // References for the chessPieces sprites
     public Sprite blackQueen, blackKnight, blackBishop, blackKing, blackRook, blackPawn;
     public Sprite whiteQueen, whiteKnight, whiteBishop, whiteKing, whiteRook, whitePawn;
+
 
     void OnMouseUp()
     {
@@ -44,12 +44,15 @@ public class Piece : MonoBehaviour
     {
         Vector3 pos = transform.position;
         currentP = GetUnityCoords(pBoard);
-        if ((pos.x - currentP.x) * dx > 0 || (pos.y - currentP.y) * dy > 0)
-            isMoving = false;
-        if (isMoving)
+        if (pos.x == currentP.x && pos.y == currentP.y)
         {
-            Vector3 currentPos = transform.position;
-            transform.position = new Vector3(currentPos.x + dx, currentPos.y + dy, -1.0f);
+            isMoving = false;
+            transform.position.Set(pos.x, pos.y, -0.1f);
+        }
+        else if (isMoving)
+        {
+            float step = baseSpeed * Time.deltaTime;
+            transform.position =  Vector3.MoveTowards(pos, new Vector3(currentP.x, currentP.y, -1.0f), step);
         }
     }
     public static PType GetPType(string name)
@@ -90,7 +93,6 @@ public class Piece : MonoBehaviour
             case "blackRook": spriteRenderer.sprite = blackRook; break;
             case "blackPawn": spriteRenderer.sprite = blackPawn; break;
 
-
             case "whiteQueen": spriteRenderer.sprite = whiteQueen; break;
             case "whiteKnight": spriteRenderer.sprite = whiteKnight; break;
             case "whiteBishop": spriteRenderer.sprite = whiteBishop; break;
@@ -103,15 +105,6 @@ public class Piece : MonoBehaviour
     public void MoveToTarget()
     {
         isMoving = true;
-        Vector3 currentPos = this.transform.position;
-        Point targetP = GetUnityCoords(pBoard);
-
-        //set dx and dy
-        float deltaX = targetP.x - currentPos.x;
-        float deltaY = targetP.y - currentPos.y;
-        float a = Mathf.Atan2(deltaY, deltaX);
-        dx = baseSpeed * Mathf.Cos(a);
-        dy = baseSpeed * Mathf.Sin(a);
     }
     public void TeleportToCoords()
     {

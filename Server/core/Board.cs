@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-class Board
+public class Board
 {
     private BasePiece[,] board;
     private List<BasePiece> blackPieces;
@@ -162,7 +162,7 @@ class Board
             default: return 0;
         }
     }
-    internal Int16 EvaluateBoard(bool whiteToPlay)
+    public Int16 EvaluateBoard(bool whiteToPlay)
     {
         //evaluate the points for the board
         Int16 count = 0;
@@ -287,6 +287,25 @@ class Board
             SetPiece(null, move.GetStartPoint());
         }
         return !IsOutsideBoard(move.GetTargetPoint());
+    }
+    public bool UndoMove(Move move)
+    {
+        if (!IsOutsideBoard(move.GetStartPoint()))
+        {
+            BasePiece piece = board[move.GetTargetPoint().x, move.GetTargetPoint().y];
+            BasePiece target = board[move.GetStartPoint().x, move.GetStartPoint().y];
+            if (target != null)
+            {
+                if (target.GetIsBlack())
+                    blackPieces.Remove(target);
+                else
+                    whitePieces.Remove(target);
+            }
+            piece.setPos(move.GetStartPoint());
+            SetPiece(piece, move.GetStartPoint());
+            SetPiece(move.GetDestroyedPiece(), move.GetTargetPoint());
+        }
+        return !IsOutsideBoard(move.GetStartPoint());
     }
     public List<Board> GetNextGenBoards(bool blackToPlay)
     {

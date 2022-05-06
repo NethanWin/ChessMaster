@@ -141,7 +141,7 @@ class Board
                         fen += countEmptySpace;
                         countEmptySpace = 0;
                     }
-                    fen += board[x, y].GetPieceType();
+                    fen += board[x, y].GetPieceChar();
                 }
                 else
                     countEmptySpace++;

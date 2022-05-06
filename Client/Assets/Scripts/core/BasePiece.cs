@@ -15,7 +15,7 @@ class BasePiece
     private bool isBlack;
     private bool isFirstMove;
 
-    public BasePiece(PType type, bool isBlack, Point initPoint) 
+    public BasePiece(PType type, bool isBlack, Point initPoint)
     {
         moves = new List<Move>();
         this.currentPos = initPoint;
@@ -31,7 +31,7 @@ class BasePiece
         {
             case PType.King:
                 UpdateMoves_King(board); break;
-            case PType.Queen: 
+            case PType.Queen:
                 UpdateMoves_Queen(board); break;
             case PType.Rook:
                 UpdateMoves_Rook(board); break;
@@ -54,7 +54,6 @@ class BasePiece
                 moves.RemoveAt(i);
         }
     }
-
     private void UpdateMoves_King(Board board)
     {
         moves.Add(GetMoveReletive(0, 1));
@@ -112,41 +111,32 @@ class BasePiece
                 moves.Add(GetMoveReletive(0, -2));
         }
     }
-
-    private Move GetMoveReletive(int x, int y)
+    private Move GetMoveReletive(sbyte x, sbyte y)
     {
         //movement reletive to the currentPos
-        return GetMove((int)currentPos.x + x, (int)currentPos.y + y);
+        return GetMove((byte)(currentPos.x + x), (byte)(currentPos.y + y));
     }
-    private Move GetMove(int x, int y)
-    {
-        return new Move(currentPos, new Point(x, y));
-    }
-    private void UpdateMoveLine(Board board, int dx, int dy)
+    private Move GetMove(byte x, byte y) => new Move(currentPos, new Point(x, y));
+    private void UpdateMoveLine(Board board, sbyte dx, sbyte dy)
     {
         //adds raw moves for a line (dx and dy is the direction of the line)
-        int x = (int)currentPos.x + dx;
-        int y = (int)currentPos.y + dy;
-        for (;!board.IsOutsideBoard(new Point(x, y)); x += dx, y += dy)
+        byte x = (byte)(currentPos.x + dx);
+        byte y = (byte)(currentPos.y + dy);
+        for (; !board.IsOutsideBoard(new Point(x, y)); x = (byte)(dx + x), y = (byte)(dy + y))
         {
             moves.Add(GetMove(x, y));
             if (board.IsAllyOnPoint(new Point(x, y), isBlack))
                 break;
         }
     }
-
-    public int GetX() => (int)currentPos.x;
-    public int GetY() => (int)currentPos.y;
+    public byte GetX() => (byte)currentPos.x;
+    public byte GetY() => (byte)currentPos.y;
     public bool GetIsBlack() => isBlack;
-    public char GetPieceType()
-    {
-        if (isBlack)
-            return GetBaseType();
-        return (char)(GetBaseType() + 'A' - 'a');
-    }
+    public char GetPieceChar() => isBlack ? GetBaseType() : (char)(GetBaseType() + 'A' - 'a');
+    public PType GetPType() => type;
     private char GetBaseType()
     {
-        switch(type)
+        switch (type)
         {
             case PType.King:
                 return 'k';
@@ -164,16 +154,11 @@ class BasePiece
                 return ' ';
         }
     }
-    
     //temp method
     public List<Move> GetMoves() => moves;
-
     public void setPos(Point newPos)
     {
         currentPos = new Point(newPos.x, newPos.y);
-    }
-    public override string ToString()
-    {
-        return currentPos.ToString();
+        isFirstMove = false;
     }
 }

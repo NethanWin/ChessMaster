@@ -18,27 +18,38 @@ class Program
         //MinmaxPerformanceTest();
         //TestEvaluation();
     }
+    public static IPAddress GetHostsIP()
+    {
+        //returns the IP of the host's internal IP
+        IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (IPAddress ip in host.AddressList)
+            if (ip.AddressFamily.ToString() == "InterNetwork")
+                return ip;
+        return null;
+    }
     public static void ManagingClients()
     {
         //main command which handles new clients and creates thread for each
         List<Thread> threads = new List<Thread>();
-        IPAddress ipAddress = IPAddress.Parse("10.100.102.61");
+        
+        //setup Host
+        IPAddress ipAddress = GetHostsIP();
+        Console.WriteLine("Welcome to ChessMaster!");
+        Console.WriteLine("The server is now open for clients");
+        Console.WriteLine();
+        Console.WriteLine("Please copy this text to the client's IP field:");
+        Console.WriteLine(ipAddress.ToString());
         IPEndPoint localEndPoint = new IPEndPoint(ipAddress, SERVER_PORT);
+
         // Create a Socket that will use Tcp protocol
         Socket serverSocket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-        // A Socket must be associated with an endpoint using the Bind method
         serverSocket.Bind(localEndPoint);
         int id = 0;
         while (true)
         {
-            // Specify how many requests a Socket can listen before it gives Server busy response.
-            // We will listen 10 requests at a time
             serverSocket.Listen(10);
             Socket handler = serverSocket.Accept();
-
             RemoveFinishedThreads(threads);
-
-            //threads.RemoveAll(item => item == null);
             threads.Add(new Thread(() => HandleClient(handler)) { Name = "t" + id });
             threads.Last().Start();
             id++;
@@ -64,11 +75,10 @@ class Program
         try
         {
             //handle sockets for each client
-            // Incoming data from the client.
             string data = null;
             byte[] bytes = null;
             byte[] msg;
-            while (data != "exit")
+            while (true)
             {
                 bytes = new byte[1024];
                 if (data != "")
@@ -82,14 +92,13 @@ class Program
                 }
                 Thread.Sleep(100);
             }
+        }
+        catch 
+        {
             clientSocket.Shutdown(SocketShutdown.Both);
             clientSocket.Close();
+            Console.WriteLine("close");
         }
-        catch (Exception e)
-        {
-            //Console.WriteLine(e.ToString());
-        }
-        Console.WriteLine("close");
     }
     private static string AnalizingMsg(string msg, Board board)
     {
@@ -98,18 +107,12 @@ class Program
             string[] arr = msg.Split('_');
             if (arr[0] == "1")
             {
-                //testing time
-                //Board recivedBoard = new Board(arr[1]);
-                //Ai.Minmax(recivedBoard, 2, true, true);
-                //Board chosenBoard = recivedBoard.GetNextGenBoards(true)[0];
-
-                //return chosenBoard.GetFen();
                 Move m = new Move(arr[1], arr[2]);
                 board.MakeMove(m);
-                Ai.Minmax(board, 2, true, true);
-                List<Move> moves = board.GenerateMoves(true);
-                board.MakeMove(moves[0]);
-                return "1_" + moves[0].ToString();
+
+                Move bestMove = Ai.GetBestMove(board);
+                board.MakeMove(bestMove);
+                return "1_" + bestMove.ToString();
             }
             return "11_msg not in format";
         }
@@ -118,15 +121,34 @@ class Program
             return "11_disconected because timeout";
         }
     }
+    
     //Testing
     public static void MinmaxPerformanceTest()
     {
+        //Board b = new Board();
+        //Move m = new Move(new Point(0,0), new Point(0,2));
+        //Move m2 = new Move(new Point(0,1), new Point(0,3));
+        Move m;
         Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-        Ai.Minmax(new Board(), 3, true, true);
-        stopwatch.Stop();
-        Console.WriteLine(stopwatch.ElapsedMilliseconds / 1000.0);
-        Console.WriteLine(Ai.count);
+        Board b = new Board();
+
+        //Ai.Minmax(new Board(), 4, false, true);
+
+        for (int i = 0; i < 20; i++)
+        {
+            stopwatch.Start();
+            m = Ai.GetBestMove(b);
+            stopwatch.Stop();
+            Console.WriteLine();
+            
+            b.MakeMove(m);
+            
+            Console.WriteLine(stopwatch.ElapsedMilliseconds / 1000.0);
+            stopwatch.Reset();
+        }
+        
+
+        
     }
     public static void TestEvaluation()
     {

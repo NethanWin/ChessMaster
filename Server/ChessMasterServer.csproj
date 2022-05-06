@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ai.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="core\Board.cs" />
     <Compile Include="core\Move.cs" />
     <Compile Include="core\BasePiece.cs" />

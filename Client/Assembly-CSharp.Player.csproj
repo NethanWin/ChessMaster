@@ -63,9 +63,9 @@
     <Compile Include="Assets\Scripts\core\Point.cs" />
     <Compile Include="Assets\Scripts\Piece.cs" />
     <Compile Include="Assets\Scripts\Game.cs" />
+    <Compile Include="Assets\IPManager.cs" />
     <Compile Include="Assets\Scripts\core\BasePiece.cs" />
     <Compile Include="Assets\Scripts\core\Board.cs" />
-    <Compile Include="Assets\IPManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

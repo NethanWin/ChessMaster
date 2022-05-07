@@ -52,10 +52,6 @@ public class Client : MonoBehaviour
         socket.Shutdown(SocketShutdown.Both);
         socket.Close();
     }
-    public void SendBoard()
-    {
-        SendMsg(game.GetBoard());
-    }
     public void SendMsg(string msg)
     {
         try
@@ -93,7 +89,6 @@ public class Client : MonoBehaviour
                 if (str != "")
                 {
                     HandleResponse(str);
-                    game.NextTurn();
                     waitForServer = false;
                 }
             }
@@ -107,6 +102,7 @@ public class Client : MonoBehaviour
             string[] arr = str.Split('_');
             if (arr[0] == "1")
             {
+
                 Move m = new Move(arr[1], arr[2]);
                 game.MakeMove(m);
                 return true;

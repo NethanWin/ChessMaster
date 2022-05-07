@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 7896177171167452589}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.463, y: 0.438, z: -1}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1.8333, y: 1.8333, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
   movePlate: {fileID: 6944022598588443552, guid: 4a40e7fe0974fff42bcd2faa073a94a9, type: 3}
+  game: {fileID: 0}
   blackQueen: {fileID: 21300000, guid: f9daa4457c90bf54db0c042bb826f146, type: 3}
   blackKnight: {fileID: 21300000, guid: c1eede6e070c0e443b9be3b799204008, type: 3}
   blackBishop: {fileID: 21300000, guid: e63f9803009f68f4cb6a1389326e4653, type: 3}

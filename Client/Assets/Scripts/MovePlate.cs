@@ -43,7 +43,7 @@ public class MovePlate : MonoBehaviour
         piece.SetPBoard(new Point(pBoard));
         piece.MoveToTarget();
         game.SetPosition(pieceObject);
-        game.NextTurn();
+    //    game.NextTurn();
         game.DestroyAllMovePlates();
     }
     public void SetPoint(Point p)

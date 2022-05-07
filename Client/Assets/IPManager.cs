@@ -13,8 +13,15 @@ public class IPManager : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
     }
+    private void Update()
+    {
+        if (Input.GetKeyDown("enter"))
+            SetIP();
+    }
     public void SetIP()
     {
+        //TODO:
+        //add condition if the ip cant connect
         ip = text.text;
         Debug.Log(ip);
         SceneManager.LoadScene("Game");

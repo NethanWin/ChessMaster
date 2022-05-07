@@ -13,6 +13,9 @@ public class Game : MonoBehaviour
     private bool whiteTurn = true;
     private bool gameOver = false;
 
+    public bool isWhiteMoving = false;
+    public bool isBlackMoving = false;
+
     public string GetBoard()
     {
         string fen = "";
@@ -63,14 +66,10 @@ public class Game : MonoBehaviour
             else
             {
                 //Add piece
-                //TODO
                 string ch2 = ch.ToString();
                 string name; bool isBlack;
                 (name, isBlack) = GetPTypeFromChar(ch);
-                if (isBlack)
-                    name = "black" + name;
-                else
-                    name = "white" + name;
+                name = (isBlack ? "black" : "white") + name;
                 SetPosition(Create(name, new Point(x, y)));
                 x++;
             }
@@ -123,27 +122,6 @@ public class Game : MonoBehaviour
     void Start()
     {
         BuildBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-        //SetPosition(Create("whiteBishop", new Point(5, 2)));
-        /*GameObject[] playerWhite = new GameObject[] { Create("whiteRook", 0, 0), Create("whiteKnight", 1, 0),
-            Create("whiteBishop", 2, 0), Create("whiteQueen", 3, 0), Create("whiteKing", 4, 0),
-            Create("whiteBishop", 5, 0), Create("whiteKnight", 6, 0), Create("whiteRook", 7, 0),
-            Create("whitePawn", 0, 1), Create("whitePawn", 1, 1), Create("whitePawn", 2, 1),
-            Create("whitePawn", 3, 1), Create("whitePawn", 4, 1), Create("whitePawn", 5, 1),
-            Create("whitePawn", 6, 1), Create("whitePawn", 7, 1)
-        };
-        
-        GameObject[] playerBlack = new GameObject[] { Create("blackRook", 0, 7), Create("blackKnight",1,7),
-            Create("blackBishop",2,7), Create("blackQueen",3,7), Create("blackKing",4,7),
-            Create("blackBishop",5,7), Create("blackKnight",6,7), Create("blackRook",7,7),
-            Create("blackPawn", 0, 6), Create("blackPawn", 1, 6), Create("blackPawn", 2, 6),
-            Create("blackPawn", 3, 6), Create("blackPawn", 4, 6), Create("blackPawn", 5, 6),
-            Create("blackPawn", 6, 6), Create("blackPawn", 7, 6) 
-        };
-        for (int i = 0; i < playerBlack.Length; i++)
-        {
-            SetPosition(playerBlack[i]);
-            SetPosition(playerWhite[i]);
-        }*/
     }
     public void Update()
     {
@@ -192,10 +170,7 @@ public class Game : MonoBehaviour
     public bool IsGameOver() => gameOver;
     public void NextTurn()
     {
-        if (whiteTurn)
-            whiteTurn = false;
-        else
-            whiteTurn = true;
+        whiteTurn = !whiteTurn;
     }
     public void Winner(string playerWinner)
     {
@@ -210,14 +185,12 @@ public class Game : MonoBehaviour
         //returns if successful
         try
         {
-
             GameObject pieceRefrence = GetGameObjectOnPosition(m.GetStartPoint());
             Piece piece = pieceRefrence.GetComponent<Piece>();
             SetEmptyPosition(piece.GetPBoard());
             piece.SetPBoard(new Point(m.GetTargetPoint()));
             piece.MoveToTarget();
             SetPosition(pieceRefrence);
-            //piece.DestroyMovePlates();
             return true;
         }
         catch

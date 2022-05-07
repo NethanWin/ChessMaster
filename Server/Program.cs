@@ -109,7 +109,6 @@ class Program
             {
                 Move m = new Move(arr[1], arr[2]);
                 board.MakeMove(m);
-
                 Move bestMove = Ai.GetBestMove(board);
                 board.MakeMove(bestMove);
                 return "1_" + bestMove.ToString();

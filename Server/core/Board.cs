@@ -110,7 +110,7 @@ public class Board
         AddToBoard(new BasePiece(PType.Knight, true, new Point(6, 7)));
         AddToBoard(new BasePiece(PType.Rook, true, new Point(7, 7)));
 
-
+        
         for (byte i = 0; i < 8; i++)
         {
             AddToBoard(new BasePiece(PType.Pawn, false, new Point(i, 1)));

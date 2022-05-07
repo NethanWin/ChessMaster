@@ -7,9 +7,12 @@ public class Piece : MonoBehaviour
     //Constants
     //movment animation
     bool isMoving = false;
-    static float mulUnity = 0.9f;
-    static float addUnity = -3.15f;
-    static float baseSpeed = 5f;
+    static float mulUnity = 0.88f;
+    static float addYUnity = -3.134f;//-3.08f;
+    static float addXUnity = -3.08f;
+    static float addYUnityForMovePlates = -3.08f;
+
+    static float baseSpeed = 8f;
 
     // References
     public GameObject controller;
@@ -44,12 +47,13 @@ public class Piece : MonoBehaviour
     {
         Vector3 pos = transform.position;
         currentP = GetUnityCoords(pBoard);
-        if (pos.x == currentP.x && pos.y == currentP.y)
+        if (pos.x == currentP.x && pos.y == currentP.y && isMoving)
         {
+            game.NextTurn();            
             isMoving = false;
             transform.position.Set(pos.x, pos.y, -0.1f);
         }
-        else if (isMoving)
+        else if (isMoving && (isWhite == game.GetWhiteTurn()))
         {
             float step = baseSpeed * Time.deltaTime;
             transform.position =  Vector3.MoveTowards(pos, new Vector3(currentP.x, currentP.y, -1.0f), step);
@@ -134,8 +138,7 @@ public class Piece : MonoBehaviour
     }
     void CreateMovePlate(Move m, bool isAttackMove)
     {
-        Point p = GetUnityCoords(m.GetTargetPoint());
-
+        Point p = GetMovePlateUnityCoords(m.GetTargetPoint());
         GameObject movPlate = Instantiate(movePlate, new Vector3(p.x, p.y, -3.0f), Quaternion.identity);
         movPlate.GetComponent<MovePlate>().SetVars(m, gameObject,  isAttackMove);
     }
@@ -146,11 +149,18 @@ public class Piece : MonoBehaviour
     }
 
     //check where to put
-    Point GetUnityCoords(Point pBoard)
+    static Point GetMovePlateUnityCoords(Point pBoard)
     {
         //Returns a Point of the engines location with the board location
-        float newX = pBoard.x * mulUnity + addUnity;
-        float newY = pBoard.y * mulUnity + addUnity;
+        float newX = pBoard.x * mulUnity + addXUnity;
+        float newY = pBoard.y * mulUnity + addYUnityForMovePlates;
+        return new Point(newX, newY);
+    }
+    static Point GetUnityCoords(Point pBoard)
+    {
+        //Returns a Point of the engines location with the board location
+        float newX = pBoard.x * mulUnity + addXUnity;
+        float newY = pBoard.y * mulUnity + addYUnity;
         return new Point(newX, newY);
     }
 }

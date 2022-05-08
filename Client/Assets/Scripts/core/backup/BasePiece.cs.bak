@@ -15,7 +15,7 @@ public class BasePiece
     private bool isBlack;
     private bool isFirstMove;
 
-    public BasePiece(PType type, bool isBlack, Point initPoint) 
+    public BasePiece(PType type, bool isBlack, Point initPoint)
     {
         moves = new List<Move>();
         this.currentPos = initPoint;
@@ -31,7 +31,7 @@ public class BasePiece
         {
             case PType.King:
                 UpdateMoves_King(board); break;
-            case PType.Queen: 
+            case PType.Queen:
                 UpdateMoves_Queen(board); break;
             case PType.Rook:
                 UpdateMoves_Rook(board); break;

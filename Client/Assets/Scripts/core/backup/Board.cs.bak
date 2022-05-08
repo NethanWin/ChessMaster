@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 public class Board
 {
-    protected BasePiece[,] board;
-    protected List<BasePiece> blackPieces;
-    protected List<BasePiece> whitePieces;
-    protected int turn;
+    private BasePiece[,] board;
+    private List<BasePiece> blackPieces;
+    private List<BasePiece> whitePieces;
+    private int turn;
 
     public Board()
     {
@@ -115,7 +115,7 @@ public class Board
             return board[(int)p.x, (int)p.y];
         return null;
     }
-    public void SetPiece(BasePiece piece, Point p)
+    public void SetPiece(BasePiece Piece, Point p)
     {
         if (p != null && !IsOutsideBoard(p))
             board[(int)p.x, (int)p.y] = piece;
@@ -167,7 +167,8 @@ public class Board
             moves.AddRange(piece.GetMoves());
         }
         return moves;
-    }  
+    }
+  
     public bool MakeMove(Move move)
     {
         if (!IsOutsideBoard(move.GetTargetPoint()))
@@ -191,8 +192,8 @@ public class Board
     {
         if (!IsOutsideBoard(move.GetStartPoint()))
         {
-            BasePiece piece = board[(int)move.GetTargetPoint().x, (int)move.GetTargetPoint().y];
-            BasePiece target = board[(int)move.GetStartPoint().x, (int)move.GetStartPoint().y];
+            BasePiece piece = board[move.GetTargetPoint().x, move.GetTargetPoint().y];
+            BasePiece target = board[move.GetStartPoint().x, move.GetStartPoint().y];
             if (target != null)
             {
                 if (target.GetIsBlack())

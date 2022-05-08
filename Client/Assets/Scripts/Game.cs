@@ -156,11 +156,7 @@ public class Game : MonoBehaviour
         for (int i = 0; i < movePlates.Length; i++)
             Destroy(movePlates[i]);
     }
-    public GameObject GetGameObjectOnPosition(Point p)
-    {
-        return board[(int)p.x, (int)p.y];
-    }
-
+    public GameObject GetGameObjectOnPosition(Point p) => board[(int)p.x, (int)p.y];
     //is a postion on the board
     public bool IsPositionOnBoard(Point p)
     {

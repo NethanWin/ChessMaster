@@ -23,7 +23,6 @@ public class IPManager : MonoBehaviour
         //TODO:
         //add condition if the ip cant connect
         ip = text.text;
-        Debug.Log(ip);
         SceneManager.LoadScene("Game");
     }
     public string GetIP() => ip;

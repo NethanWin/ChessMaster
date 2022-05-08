@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public enum PType { King, Queen, Rook, Bishop, Knight, Pawn };
 
-class BasePiece
+public class BasePiece
 {
     private Point currentPos;
     private List<Move> moves;
@@ -15,7 +15,7 @@ class BasePiece
     private bool isBlack;
     private bool isFirstMove;
 
-    public BasePiece(PType type, bool isBlack, Point initPoint)
+    public BasePiece(PType type, bool isBlack, Point initPoint) 
     {
         moves = new List<Move>();
         this.currentPos = initPoint;
@@ -31,7 +31,7 @@ class BasePiece
         {
             case PType.King:
                 UpdateMoves_King(board); break;
-            case PType.Queen:
+            case PType.Queen: 
                 UpdateMoves_Queen(board); break;
             case PType.Rook:
                 UpdateMoves_Rook(board); break;
@@ -56,14 +56,14 @@ class BasePiece
     }
     private void UpdateMoves_King(Board board)
     {
-        moves.Add(GetMoveReletive(0, 1));
-        moves.Add(GetMoveReletive(1, 0));
-        moves.Add(GetMoveReletive(0, -1));
-        moves.Add(GetMoveReletive(-1, 0));
-        moves.Add(GetMoveReletive(1, 1));
-        moves.Add(GetMoveReletive(-1, -1));
-        moves.Add(GetMoveReletive(1, -1));
-        moves.Add(GetMoveReletive(-1, 1));
+        moves.Add(GetMoveReletive(0, 1, board));
+        moves.Add(GetMoveReletive(1, 0, board));
+        moves.Add(GetMoveReletive(0, -1, board));
+        moves.Add(GetMoveReletive(-1, 0, board));
+        moves.Add(GetMoveReletive(1, 1, board));
+        moves.Add(GetMoveReletive(-1, -1, board));
+        moves.Add(GetMoveReletive(1, -1, board));
+        moves.Add(GetMoveReletive(-1, 1, board));
     }
     private void UpdateMoves_Queen(Board board)
     {
@@ -86,57 +86,61 @@ class BasePiece
     }
     private void UpdateMoves_Knight(Board board)
     {
-        moves.Add(GetMoveReletive(-1, 2));
-        moves.Add(GetMoveReletive(1, -2));
-        moves.Add(GetMoveReletive(1, 2));
-        moves.Add(GetMoveReletive(-1, -2));
+        moves.Add(GetMoveReletive(-1, 2, board));
+        moves.Add(GetMoveReletive(1, -2, board));
+        moves.Add(GetMoveReletive(1, 2, board));
+        moves.Add(GetMoveReletive(-1, -2, board));
 
-        moves.Add(GetMoveReletive(2, -1));
-        moves.Add(GetMoveReletive(-2, 1));
-        moves.Add(GetMoveReletive(2, 1));
-        moves.Add(GetMoveReletive(-2, -1));
+        moves.Add(GetMoveReletive(2, -1, board));
+        moves.Add(GetMoveReletive(-2, 1, board));
+        moves.Add(GetMoveReletive(2, 1, board));
+        moves.Add(GetMoveReletive(-2, -1, board));
     }
     private void UpdateMoves_Pawn(Board board)
     {
         if (!isBlack)
         {
-            moves.Add(GetMoveReletive(0, 1));
+            moves.Add(GetMoveReletive(0, 1, board));
             if (isFirstMove)
-                moves.Add(GetMoveReletive(0, 2));
+                moves.Add(GetMoveReletive(0, 2, board));
         }
         else
         {
-            moves.Add(GetMoveReletive(0, -1));
+            moves.Add(GetMoveReletive(0, -1, board));
             if (isFirstMove)
-                moves.Add(GetMoveReletive(0, -2));
+                moves.Add(GetMoveReletive(0, -2, board));
         }
     }
-    private Move GetMoveReletive(sbyte x, sbyte y)
+    private Move GetMoveReletive(sbyte x, sbyte y, Board board)
     {
         //movement reletive to the currentPos
-        return GetMove((byte)(currentPos.x + x), (byte)(currentPos.y + y));
+        return GetMove((byte)(currentPos.x + x), (byte)(currentPos.y + y), board);
     }
-    private Move GetMove(byte x, byte y) => new Move(currentPos, new Point(x, y));
+    private Move GetMove(byte x, byte y, Board board)
+    {
+        Point targetPos = new Point(x, y);
+        return new Move(currentPos, targetPos, board.GetPiece(targetPos));
+    }
     private void UpdateMoveLine(Board board, sbyte dx, sbyte dy)
     {
         //adds raw moves for a line (dx and dy is the direction of the line)
         byte x = (byte)(currentPos.x + dx);
         byte y = (byte)(currentPos.y + dy);
-        for (; !board.IsOutsideBoard(new Point(x, y)); x = (byte)(dx + x), y = (byte)(dy + y))
+        for (;!board.IsOutsideBoard(new Point(x, y)); x = (byte)(dx + x), y = (byte)(dy + y))
         {
-            moves.Add(GetMove(x, y));
+            moves.Add(GetMove(x, y, board));
             if (board.IsAllyOnPoint(new Point(x, y), isBlack))
                 break;
         }
     }
-    public byte GetX() => (byte)currentPos.x;
-    public byte GetY() => (byte)currentPos.y;
+    public int GetX() => (int)currentPos.x;
+    public int GetY() => (int)currentPos.y;
     public bool GetIsBlack() => isBlack;
     public char GetPieceChar() => isBlack ? GetBaseType() : (char)(GetBaseType() + 'A' - 'a');
     public PType GetPType() => type;
     private char GetBaseType()
     {
-        switch (type)
+        switch(type)
         {
             case PType.King:
                 return 'k';

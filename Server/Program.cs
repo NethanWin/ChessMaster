@@ -71,7 +71,7 @@ class Program
     }
     public static void HandleClient(Socket clientSocket)
     {
-        Board board = new Board();
+        AiBoard board = new AiBoard();
         try
         {
             //handle sockets for each client
@@ -100,7 +100,7 @@ class Program
             Console.WriteLine("close");
         }
     }
-    private static string AnalizingMsg(string msg, Board board)
+    private static string AnalizingMsg(string msg, AiBoard board)
     {
         try
         {
@@ -129,7 +129,7 @@ class Program
         //Move m2 = new Move(new Point(0,1), new Point(0,3));
         Move m;
         Stopwatch stopwatch = new Stopwatch();
-        Board b = new Board();
+        AiBoard b = new AiBoard();
 
         //Ai.Minmax(new Board(), 4, false, true);
 
@@ -151,7 +151,7 @@ class Program
     }
     public static void TestEvaluation()
     {
-        Board b = new Board("8/pppp4/8/8/8/8/8/8");
+        AiBoard b = new AiBoard("8/pppp4/8/8/8/8/8/8");
         Console.WriteLine(b.EvaluateBoard(true));
     }
 }

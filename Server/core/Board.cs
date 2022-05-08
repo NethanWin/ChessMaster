@@ -6,92 +6,17 @@ using System.Threading.Tasks;
 
 public class Board
 {
-    private BasePiece[,] board;
-    private List<BasePiece> blackPieces;
-    private List<BasePiece> whitePieces;
-    private static sbyte[,] pawn =
-    {
-        { 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 50, 50, 50, 50, 50, 50, 50, 50 },
-        { 10, 10, 10, 10, 10, 10, 10, 10 },
-        { 10, 10, 20, 30, 30, 20, 10, 10 },
-        { 5, 5, 10, 25, 25, 10, 5, 5 },
-        { 0, 0, 0, 20, 20, 0, 0, 0 },
-        { 5, -5, -10, 0, 0, -10, -5, 5 },
-        { 5, 10, 10, -20, -20, 10, 10, 5 },
-        { 0, 0, 0, 0, 0, 0, 0, 0 }
-    };
-    private static sbyte[,] knight =
-    {
-        { -50, -40, -30, -30, -30, -30, -40, -50 },
-        { 50, 50, 50, 50, 50, 50, 50, 50 },
-        { 10, 10, 10, 10, 10, 10, 10, 10 },
-        { 10, 10, 20, 30, 30, 20, 10, 10 },
-        { 5, 5, 10, 25, 25, 10, 5, 5 },
-        { 0, 0, 0, 20, 20, 0, 0, 0 },
-        { 5, -5, -10, 0, 0, -10, -5, 5 },
-        { 5, 10, 10, -20, -20, 10, 10, 5 },
-        { 0, 0, 0, 0, 0, 0, 0, 0 }
-    };
-    private static sbyte[,] bishop =
-    {
-        { -20, -10, -10, -10, -10, -10, -10, -20 },
-        { -10, 0, 0, 0, 0, 0, 0, -10 },
-        { -10, 0, 5, 10, 10, 5, 0, -10 },
-        { -10, 5, 5, 10, 10, 5, 5, -10 },
-        { -10, 0, 10, 10, 10, 10, 0, -10 },
-        { -10, 10, 10, 10, 10, 10, 10, -10},
-        { -10, 5, 0, 0, 0, 0, 5, -10 },
-        { -20, -10, -10, -10, -10, -10, -10, -20 }
-    };
-    private static sbyte[,] rook =
-    {
-        { 0, 0, 0, 0, 0, 0, 0, 0},
-        { 5, 10, 10, 10, 10, 10, 10, 5},
-        { -5, 0, 0, 0, 0, 0, 0, -5 },
-        { -5, 0, 0, 0, 0, 0, 0, -5 },
-        { -5, 0, 0, 0, 0, 0, 0, -5 },
-        { -5, 0, 0, 0, 0, 0, 0, -5 },
-        { -5, 0, 0, 0, 0, 0, 0, -5 },
-        { 0, 0, 0, 5, 5, 0, 0, 0}
-    };
-    private static sbyte[,] queen =
-    {
-        { -20, -10, -10, -5, -5, -10, -10, -20 },
-        { -10, 0, 0, 0, 0, 0, 0, -10 },
-        { -10,  0,  5,  5,  5,  5,  0,-10 },
-        { -5,  0,  5,  5,  5,  5,  0, -5, },
-        { 0,  0,  5,  5,  5,  5,  0, -5, },
-        { -10,  5,  5,  5,  5,  5,  0,-10, },
-        { -10,  0,  5,  0,  0,  0,  0,-10, },
-        { -20,-10,-10, -5, -5,-10,-10,-20 }
-    };
-    private static sbyte[,] king =
-    {
-        { -30,-40,-40,-50,-50,-40,-40,-30 },
-        { -30,-40,-40,-50,-50,-40,-40,-30 },
-        { -30,-40,-40,-50,-50,-40,-40,-30},
-        { -30,-40,-40,-50,-50,-40,-40,-30},
-        { -20,-30,-30,-40,-40,-30,-30,-20},
-        { -10,-20,-20,-20,-20,-20,-20,-10},
-        { 20,20,0,0,0,0,20,20 },
-        { 20,30,10,0,0,10,30,20 }
-    };
+    protected BasePiece[,] board;
+    protected List<BasePiece> blackPieces;
+    protected List<BasePiece> whitePieces;
+    protected int turn;
 
-    // king end game
-    /*-50,-40,-30,-20,-20,-30,-40,-50,
-    -30,-20,-10,  0,  0,-10,-20,-30,
-    -30,-10, 20, 30, 30, 20,-10,-30,
-    -30,-10, 30, 40, 40, 30,-10,-30,
-    -30,-10, 30, 40, 40, 30,-10,-30,
-    -30,-10, 20, 30, 30, 20,-10,-30,
-    -30,-30,  0,  0,  0,  0,-30,-30,
-    -50,-30,-30,-30,-30,-30,-30,-50*/
     public Board()
     {
         board = new BasePiece[8,8];
         blackPieces = new List<BasePiece>();
         whitePieces = new List<BasePiece>();
+        turn = 0;
         AddToBoard(new BasePiece(PType.Rook, false, new Point(0,0)));
         AddToBoard(new BasePiece(PType.Knight, false, new Point(1,0)));
         AddToBoard(new BasePiece(PType.Bishop, false, new Point(2,0)));
@@ -111,7 +36,7 @@ public class Board
         AddToBoard(new BasePiece(PType.Rook, true, new Point(7, 7)));
 
         
-        for (byte i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
         {
             AddToBoard(new BasePiece(PType.Pawn, false, new Point(i, 1)));
             AddToBoard(new BasePiece(PType.Pawn, true, new Point(i, 6)));
@@ -123,8 +48,8 @@ public class Board
         blackPieces = new List<BasePiece>();
         whitePieces = new List<BasePiece>();
 
-        byte y = (byte)(board.GetLength(0) - 1);
-        byte x = 0;
+        int y = board.GetLength(0) - 1;
+        int x = 0;
         foreach (char ch in fen)
         {
             if (ch == '/')
@@ -134,7 +59,7 @@ public class Board
             }
             else if (ch - '0' >= 0 && ch - '0' < 9)
             {
-                x += (byte)(ch - '0');
+                x += ch - '0';
             }
             else
             {
@@ -145,33 +70,7 @@ public class Board
             }
         }
     }
-    internal Int16 EvaluatePiece(bool whiteToPlay, BasePiece p, byte x, byte y)
-    {
-        //returns the value of a piece acording to it's position
-        PType type = p.GetPType();
-        if (whiteToPlay == !p.GetIsBlack())
-            y = (byte)(7 - y);
-        switch (type)
-        {
-            case PType.King: return king[y, x];
-            case PType.Queen: return queen[y, x];
-            case PType.Rook: return rook[y, x];
-            case PType.Bishop: return bishop[y, x];
-            case PType.Knight: return knight[y, x];
-            case PType.Pawn: return pawn[y, x];
-            default: return 0;
-        }
-    }
-    public Int16 EvaluateBoard(bool whiteToPlay)
-    {
-        //evaluate the points for the board
-        Int16 count = 0;
-        foreach (BasePiece p in board)
-            if (p != null)
-                count += EvaluatePiece(whiteToPlay, p, p.GetX(), p.GetY());
-        return count;
-    }
-    private (PType, bool) GetPTypeFromChar(char ch)
+    protected (PType, bool) GetPTypeFromChar(char ch)
     {
         //(PType, isBlack)
         bool isBlack = true;
@@ -213,13 +112,13 @@ public class Board
     public BasePiece GetPiece(Point p)
     {
         if (p != null && !IsOutsideBoard(p))
-            return board[p.x, p.y];
+            return board[(int)p.x, (int)p.y];
         return null;
     }
     public void SetPiece(BasePiece piece, Point p)
     {
         if (p != null && !IsOutsideBoard(p))
-            board[p.x, p.y] = piece;
+            board[(int)p.x, (int)p.y] = piece;
     }
     public bool IsAllyOnPoint(Point targetP, bool isBlack)
     {
@@ -273,8 +172,8 @@ public class Board
     {
         if (!IsOutsideBoard(move.GetTargetPoint()))
         {
-            BasePiece piece = board[move.GetStartPoint().x, move.GetStartPoint().y];
-            BasePiece target = board[move.GetTargetPoint().x, move.GetTargetPoint().y];
+            BasePiece piece = board[(int)move.GetStartPoint().x, (int)move.GetStartPoint().y];
+            BasePiece target = board[(int)move.GetTargetPoint().x, (int)move.GetTargetPoint().y];
             if (target != null)
             {
                 if (target.GetIsBlack())
@@ -292,8 +191,8 @@ public class Board
     {
         if (!IsOutsideBoard(move.GetStartPoint()))
         {
-            BasePiece piece = board[move.GetTargetPoint().x, move.GetTargetPoint().y];
-            BasePiece target = board[move.GetStartPoint().x, move.GetStartPoint().y];
+            BasePiece piece = board[(int)move.GetTargetPoint().x, (int)move.GetTargetPoint().y];
+            BasePiece target = board[(int)move.GetStartPoint().x, (int)move.GetStartPoint().y];
             if (target != null)
             {
                 if (target.GetIsBlack())

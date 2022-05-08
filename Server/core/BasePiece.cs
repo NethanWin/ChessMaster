@@ -56,14 +56,14 @@ public class BasePiece
     }
     private void UpdateMoves_King(Board board)
     {
-        moves.Add(GetMoveReletive(0, 1, board));
-        moves.Add(GetMoveReletive(1, 0, board));
-        moves.Add(GetMoveReletive(0, -1, board));
-        moves.Add(GetMoveReletive(-1, 0, board));
-        moves.Add(GetMoveReletive(1, 1, board));
-        moves.Add(GetMoveReletive(-1, -1, board));
-        moves.Add(GetMoveReletive(1, -1, board));
-        moves.Add(GetMoveReletive(-1, 1, board));
+        moves.Add(GetMoveRelative(0, 1, board));
+        moves.Add(GetMoveRelative(1, 0, board));
+        moves.Add(GetMoveRelative(0, -1, board));
+        moves.Add(GetMoveRelative(-1, 0, board));
+        moves.Add(GetMoveRelative(1, 1, board));
+        moves.Add(GetMoveRelative(-1, -1, board));
+        moves.Add(GetMoveRelative(1, -1, board));
+        moves.Add(GetMoveRelative(-1, 1, board));
     }
     private void UpdateMoves_Queen(Board board)
     {
@@ -86,32 +86,39 @@ public class BasePiece
     }
     private void UpdateMoves_Knight(Board board)
     {
-        moves.Add(GetMoveReletive(-1, 2, board));
-        moves.Add(GetMoveReletive(1, -2, board));
-        moves.Add(GetMoveReletive(1, 2, board));
-        moves.Add(GetMoveReletive(-1, -2, board));
+        moves.Add(GetMoveRelative(-1, 2, board));
+        moves.Add(GetMoveRelative(1, -2, board));
+        moves.Add(GetMoveRelative(1, 2, board));
+        moves.Add(GetMoveRelative(-1, -2, board));
 
-        moves.Add(GetMoveReletive(2, -1, board));
-        moves.Add(GetMoveReletive(-2, 1, board));
-        moves.Add(GetMoveReletive(2, 1, board));
-        moves.Add(GetMoveReletive(-2, -1, board));
+        moves.Add(GetMoveRelative(2, -1, board));
+        moves.Add(GetMoveRelative(-2, 1, board));
+        moves.Add(GetMoveRelative(2, 1, board));
+        moves.Add(GetMoveRelative(-2, -1, board));
     }
     private void UpdateMoves_Pawn(Board board)
     {
-        if (!isBlack)
+        int mul = isBlack ? -1 : 1;
+        BasePiece tempPiece = board.GetPiece(new Point(currentPos.x, currentPos.y + (sbyte)mul));
+        
+        if (tempPiece == null)
+            moves.Add(GetMoveRelative(0, (sbyte)mul, board));
+        if (currentPos.y == 1)
+            moves.Add(GetMoveRelative(0, (sbyte)(2 * mul), board));
+
+        //runs twice for each side it can attack
+        for (int targetX = -1; targetX < 2; targetX += 2)
         {
-            moves.Add(GetMoveReletive(0, 1, board));
-            if (isFirstMove)
-                moves.Add(GetMoveReletive(0, 2, board));
-        }
-        else
-        {
-            moves.Add(GetMoveReletive(0, -1, board));
-            if (isFirstMove)
-                moves.Add(GetMoveReletive(0, -2, board));
+            Point targetPos = new Point(currentPos.x + targetX, currentPos.y + mul);
+            if (!board.IsOutsideBoard(targetPos))
+            {
+                BasePiece basePiece = board.GetPiece(targetPos);
+                if (basePiece != null && basePiece.isBlack != isBlack)
+                    moves.Add(GetMoveRelative((sbyte)targetX, (sbyte)mul, board));
+            }
         }
     }
-    private Move GetMoveReletive(sbyte x, sbyte y, Board board)
+    private Move GetMoveRelative(sbyte x, sbyte y, Board board)
     {
         //movement reletive to the currentPos
         return GetMove((byte)(currentPos.x + x), (byte)(currentPos.y + y), board);
@@ -123,12 +130,14 @@ public class BasePiece
     }
     private void UpdateMoveLine(Board board, sbyte dx, sbyte dy)
     {
-        //adds raw moves for a line (dx and dy is the direction of the line)
+        //Adds raw moves for a line (dx and dy is the direction of the line)
         byte x = (byte)(currentPos.x + dx);
         byte y = (byte)(currentPos.y + dy);
         for (;!board.IsOutsideBoard(new Point(x, y)); x = (byte)(dx + x), y = (byte)(dy + y))
         {
             moves.Add(GetMove(x, y, board));
+            if (board.GetPiece(new Point(x, y)) != null && board.GetPiece(new Point(x, y)).isBlack != isBlack)
+                break;
             if (board.IsAllyOnPoint(new Point(x, y), isBlack))
                 break;
         }

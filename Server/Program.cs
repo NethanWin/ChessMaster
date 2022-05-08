@@ -55,7 +55,6 @@ class Program
             id++;
         }
     }
-
     private static void RemoveFinishedThreads(List<Thread> threads)
     {
         List<Thread> deleteThreads = new List<Thread>();
@@ -109,8 +108,10 @@ class Program
             {
                 Move m = new Move(arr[1], arr[2]);
                 board.MakeMove(m);
+                Console.WriteLine(board.GetFen());
                 Move bestMove = Ai.GetBestMove(board);
                 board.MakeMove(bestMove);
+                Console.WriteLine(board.GetFen());
                 return "1_" + bestMove.ToString();
             }
             return "11_msg not in format";

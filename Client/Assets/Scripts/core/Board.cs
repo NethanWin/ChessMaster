@@ -70,7 +70,7 @@ public class Board
             }
         }
     }
-    private (PType, bool) GetPTypeFromChar(char ch)
+    protected (PType, bool) GetPTypeFromChar(char ch)
     {
         //(PType, isBlack)
         bool isBlack = true;

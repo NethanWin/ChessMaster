@@ -14,7 +14,8 @@ class Program
     public const int SERVER_PORT = 11000;
     public static void Main(string[] args)
     {
-        ManagingClients();
+        DBManager db = new DBManager();
+        //ManagingClients();
         //MinmaxPerformanceTest();
         //TestEvaluation();
     }

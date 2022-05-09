@@ -38,12 +38,15 @@ public class MovePlate : MonoBehaviour
         }
 
         //set empty in the old piece's board
+        
         game.SetEmptyPosition(piece.GetPBoard());
-        controller.GetComponent<Client>().SendMsg(string.Format("1_{0}_{1}", piece.GetPBoard(), pBoard));
+        
         piece.SetPBoard(new Point(pBoard));
         piece.MoveToTarget();
         game.SetPosition(pieceObject);
         game.DestroyAllMovePlates();
+        
+        controller.GetComponent<Client>().SendMsg(string.Format("1_{0}_{1}", piece.GetPBoard(), pBoard));
     }
     public void SetPoint(Point p)
     {

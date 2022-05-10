@@ -14,8 +14,8 @@ class Program
     public const int SERVER_PORT = 11000;
     public static void Main(string[] args)
     {
-        DBManager db = new DBManager();
-        //ManagingClients();
+        //DBManager db = new DBManager();
+        ManagingClients();
         //MinmaxPerformanceTest();
         //TestEvaluation();
     }
@@ -32,7 +32,8 @@ class Program
     {
         //main command which handles new clients and creates thread for each
         List<Thread> threads = new List<Thread>();
-        
+        DBManager db = new DBManager();
+
         //setup Host
         IPAddress ipAddress = GetHostsIP();
         Console.WriteLine("Welcome to ChessMaster!");
@@ -51,7 +52,7 @@ class Program
             serverSocket.Listen(10);
             Socket handler = serverSocket.Accept();
             RemoveFinishedThreads(threads);
-            threads.Add(new Thread(() => HandleClient(handler)) { Name = "t" + id });
+            threads.Add(new Thread(() => HandleClient(handler, db)) { Name = "t" + id });
             threads.Last().Start();
             id++;
         }
@@ -69,8 +70,9 @@ class Program
                 threads.Remove(t);
         }
     }
-    public static void HandleClient(Socket clientSocket)
+    public static void HandleClient(Socket clientSocket, DBManager db)
     {
+        int dbUserID = 0; // to get
         AiBoard board = new AiBoard();
         try
         {
@@ -86,8 +88,7 @@ class Program
                     int bytesRec = clientSocket.Receive(bytes);
                     data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
                     Console.WriteLine("{0}: {1}", Thread.CurrentThread.Name, data);
-
-                    msg = Encoding.ASCII.GetBytes(AnalizingMsg(data, board));
+                    msg = Encoding.ASCII.GetBytes(AnalizingMsg(data, board, db));
                     clientSocket.Send(msg);
                 }
                 Thread.Sleep(100);
@@ -100,7 +101,7 @@ class Program
             Console.WriteLine("close");
         }
     }
-    private static string AnalizingMsg(string msg, AiBoard board)
+    private static string AnalizingMsg(string msg, AiBoard board, DBManager db, int id)
     {
         try
         {
@@ -108,11 +109,10 @@ class Program
             if (arr[0] == "1")
             {
                 Move m = new Move(arr[1], arr[2]);
+                db.AddMove(m, id);
                 board.MakeMove(m);
-                Console.WriteLine(board.GetFen());
                 Move bestMove = Ai.GetBestMove(board);
                 board.MakeMove(bestMove);
-                Console.WriteLine(board.GetFen());
                 return "1_" + bestMove.ToString();
             }
             return "11_msg not in format";

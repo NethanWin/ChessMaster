@@ -178,15 +178,53 @@ public class Game : MonoBehaviour
     }
     public bool MakeMove(Move m)
     {
+        /*
+        Piece piece = pieceObject.GetComponent<Piece>();
+        if (attack)
+        {
+            GameObject enemyChessPiece = game.GetGameObjectOnPosition(pBoard);
+
+            if (enemyChessPiece.name == "whiteKing")
+                game.Winner("black");
+            if (enemyChessPiece.name == "blackKing")
+                game.Winner("white");
+            Destroy(enemyChessPiece);
+        }
+
+        //set empty in the old piece's board
+
+        Point tempP = piece.GetPBoard();
+        game.SetEmptyPosition(piece.GetPBoard());
+        piece.SetPBoard(new Point(pBoard));
+        piece.MoveToTarget();
+        game.SetPosition(pieceObject);
+        game.DestroyAllMovePlates();
+        */
+
+
         //returns if successful
         try
         {
             GameObject pieceRefrence = GetGameObjectOnPosition(m.GetStartPoint());
             Piece piece = pieceRefrence.GetComponent<Piece>();
+            
+            //testing
+            /*GameObject enemyChessPiece = GetGameObjectOnPosition(m.GetTargetPoint());
+            if (enemyChessPiece != null)
+                Destroy(enemyChessPiece);
+            */
+            //end testing
+            
+            
             SetEmptyPosition(piece.GetPBoard());
+
             piece.SetPBoard(new Point(m.GetTargetPoint()));
             piece.MoveToTarget();
             SetPosition(pieceRefrence);
+            //if (pieceToDestroy != null)
+            //{
+            //    Destroy(pieceToDestroy);
+            //}
             return true;
         }
         catch

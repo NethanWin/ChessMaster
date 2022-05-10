@@ -9,6 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/EnterIP.unity
     guid: c1f1cffe213300e49a03e82cb38b081d
   - enabled: 1
+    path: Assets/Scenes/SignUp.unity
+    guid: d37181cee37ba2f4e8571279e12f4135
+  - enabled: 1
+    path: Assets/Scenes/Login.unity
+    guid: 196c6356e2de39444b4d4fe192b86201
+  - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}

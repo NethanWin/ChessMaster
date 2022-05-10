@@ -88,7 +88,7 @@ class Program
                     int bytesRec = clientSocket.Receive(bytes);
                     data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
                     Console.WriteLine("{0}: {1}", Thread.CurrentThread.Name, data);
-                    msg = Encoding.ASCII.GetBytes(AnalizingMsg(data, board, db));
+                    msg = Encoding.ASCII.GetBytes(AnalizingMsg(data, board, db, 5));//change 55555555555555555555
                     clientSocket.Send(msg);
                 }
                 Thread.Sleep(100);

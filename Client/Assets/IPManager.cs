@@ -11,12 +11,27 @@ public class IPManager : MonoBehaviour
     public TextMeshProUGUI text;
     private void Start()
     {
-        DontDestroyOnLoad(gameObject);
+
+    }
+    public void AttemptToConnect()
+    {
+        string ip = text.text;
+        GameObject network = GameObject.FindGameObjectWithTag("NetworkManager");
+        bool temp = network.GetComponent<Client>().StartClient(ip);
+        Debug.Log(temp);
+        if (temp)
+            SceneManager.LoadScene("Login");
+        else
+        {
+            //if couldnt connect to client
+
+        }
+
     }
     private void Update()
     {
         if (Input.GetKeyDown("enter"))
-            SetIP();
+            AttemptToConnect();
     }
     public void SetIP()
     {
@@ -24,6 +39,7 @@ public class IPManager : MonoBehaviour
         //add condition if the ip cant connect
         ip = text.text;
         SceneManager.LoadScene("Game");
+        
     }
     public string GetIP() => ip;
 }

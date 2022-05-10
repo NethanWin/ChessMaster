@@ -9,6 +9,7 @@ TagManager:
   - RestartText
   - Username
   - Password
+  - NetworkManager
   layers:
   - Default
   - TransparentFX

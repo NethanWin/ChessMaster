@@ -16,35 +16,48 @@ using UnityEngine.UI;
 public class Client : MonoBehaviour
 {
     static string ipStr;
-    int count = 0;
     static bool waitForServer;
     static Socket socket;
     static Game game;
 
     void Start()
     {
-        game = GetComponent<Game>();
-        StartClient();
+        DontDestroyOnLoad(gameObject);
+        //game = GetComponent<Game>();
     }
-    public void StartClient()
+    public bool StartClient(string ip)
     {
+        //returns if succesful
         // Connect to a Remote server
-        IPManager ipManager = GameObject.Find("IP Manager").GetComponent<IPManager>();
-        ipStr = ipManager.GetIP();
-        ipStr = ipStr.Substring(0, ipStr.Length - 1);
-
-        IPHostEntry host = Dns.GetHostEntry("localhost");
-        //IPAddress ipAddress = IPAddress.Parse("192.168.145.1");//("10.100.102.64");//host.AddressList[0];
-        IPAddress ipAddress = IPAddress.Parse(ipStr);
-        IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
-        socket = new Socket(ipAddress.AddressFamily,
-            SocketType.Stream, ProtocolType.Tcp);
+        ipStr = ip;
         try
         {
+            ipStr = ipStr.Substring(0, ipStr.Length - 1);
+
+            IPAddress ipAddress = IPAddress.Parse(ipStr);
+            Debug.Log(ipAddress.ToString());
+            IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
+            socket = new Socket(ipAddress.AddressFamily,
+                SocketType.Stream, ProtocolType.Tcp);
+            
             //Connect the socket to the server
             socket.Connect(remoteEP);
+            //SendMessage("0_attempt to connect");
+            return SocketConnected(socket);
         }
-        finally {}
+        catch
+        {
+            return false;
+        }
+    }
+    static bool SocketConnected(Socket s)
+    {
+        bool part1 = s.Poll(1000, SelectMode.SelectRead);
+        bool part2 = (s.Available == 0);
+        if (part1 && part2)
+            return false;
+        else
+            return true;
     }
     public void CloseClient()
     {
@@ -62,7 +75,7 @@ public class Client : MonoBehaviour
         catch (Exception ex)
         {
             CloseClient();
-            StartClient();
+            StartClient(ipStr);
         }
     }
     public string CleanString(string str)
@@ -78,6 +91,9 @@ public class Client : MonoBehaviour
     }
     public void Update()
     {
+        if (SceneManager.GetActiveScene().name == "EnterIP")
+            return;
+
         byte[] bytes = new byte[1024];
         if (waitForServer)
             try

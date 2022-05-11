@@ -17,7 +17,7 @@ public class Game : MonoBehaviour
     public bool isBlackMoving = false;
     public void Start()
     {
-        SceneManager.UnloadSceneAsync("Login");
+        //SceneManager.UnloadSceneAsync("Login");
         BuildBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     }
     public void Update()
@@ -207,7 +207,6 @@ public class Game : MonoBehaviour
         {
             GameObject pieceRefrence = GetGameObjectOnPosition(m.GetStartPoint());
             Piece piece = pieceRefrence.GetComponent<Piece>();
-            
             //testing
             /*GameObject enemyChessPiece = GetGameObjectOnPosition(m.GetTargetPoint());
             if (enemyChessPiece != null)

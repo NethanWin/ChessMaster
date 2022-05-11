@@ -99,7 +99,7 @@ class Program
                             board.MakeMove(m);
                             Move bestMove = Ai.GetBestMove(board);
                             board.MakeMove(bestMove);
-                            msgToSend = string.Format("1_{}", bestMove.ToString());
+                            msgToSend = string.Format("1_{0}", bestMove.ToString());
                         }
                         else if (arr[0] == "2")
                         {
@@ -135,7 +135,6 @@ class Program
                     }
                     finally
                     {
-                        Console.WriteLine(msgToSend);
                         clientSocket.Send(Encoding.ASCII.GetBytes(msgToSend));
                     }
                 }

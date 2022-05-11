@@ -15,7 +15,7 @@ public class MovePlate : MonoBehaviour
     public void Start()
     {
         controller = GameObject.FindGameObjectWithTag("GameController");
-        client = GameObject.FindGameObjectWithTag("NeyworkManager").GetComponent<Client>();
+        client = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<Client>();
 
         game = controller.GetComponent<Game>();
 
@@ -48,7 +48,7 @@ public class MovePlate : MonoBehaviour
         game.DestroyAllMovePlates();
 
         client.SetWaitForServer(true);
-        controller.GetComponent<Client>().SendMsg(string.Format("1_{0}_{1}", tempP/*piece.GetPBoard()*/, pBoard));
+        client.SendMsg(string.Format("1_{0}_{1}", tempP/*piece.GetPBoard()*/, pBoard));
     }
     public void SetPoint(Point p)
     {

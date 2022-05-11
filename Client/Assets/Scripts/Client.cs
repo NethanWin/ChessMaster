@@ -24,6 +24,7 @@ public class Client : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "Game")
         {
             waitForServer = false;
+            game = GameObject.FindGameObjectWithTag("GameController").GetComponent<Game>();
         }
     }
     void Start()
@@ -38,7 +39,7 @@ public class Client : MonoBehaviour
         if (waitForServer)
             try
             {
-                // Receive the response from the remote device.
+                // Receive the response from the remote device
                 int bytesRec = socket.Receive(bytes);
                 string str = Encoding.ASCII.GetString(bytes);
                 str = CleanString(str);

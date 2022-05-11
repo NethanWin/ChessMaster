@@ -7,7 +7,7 @@ public class MovePlate : MonoBehaviour
     GameObject controller;
     GameObject pieceObject = null;
     Game game;
-
+    Client client;
     //board pos
     Point pBoard = new Point(0,0);
     bool attack = false;
@@ -15,6 +15,8 @@ public class MovePlate : MonoBehaviour
     public void Start()
     {
         controller = GameObject.FindGameObjectWithTag("GameController");
+        client = GameObject.FindGameObjectWithTag("NeyworkManager").GetComponent<Client>();
+
         game = controller.GetComponent<Game>();
 
         if (attack)
@@ -32,7 +34,7 @@ public class MovePlate : MonoBehaviour
             if (enemyChessPiece.name == "whiteKing")
                 game.Winner("black");
             if (enemyChessPiece.name == "blackKing")
-                game.Winner("white");
+                game.Winner("white");   
             Destroy(enemyChessPiece);
         }
 
@@ -45,6 +47,7 @@ public class MovePlate : MonoBehaviour
         game.SetPosition(pieceObject);
         game.DestroyAllMovePlates();
 
+        client.SetWaitForServer(true);
         controller.GetComponent<Client>().SendMsg(string.Format("1_{0}_{1}", tempP/*piece.GetPBoard()*/, pBoard));
     }
     public void SetPoint(Point p)

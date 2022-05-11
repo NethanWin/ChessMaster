@@ -19,11 +19,36 @@ public class Client : MonoBehaviour
     static bool waitForServer;
     static Socket socket;
     static Game game;
-
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (SceneManager.GetActiveScene().name == "Game")
+        {
+            waitForServer = false;
+        }
+    }
     void Start()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
         DontDestroyOnLoad(gameObject);
-        //game = GetComponent<Game>();
+        waitForServer = false;
+    }
+    public void Update()
+    {
+        byte[] bytes = new byte[1024];
+        if (waitForServer)
+            try
+            {
+                // Receive the response from the remote device.
+                int bytesRec = socket.Receive(bytes);
+                string str = Encoding.ASCII.GetString(bytes);
+                str = CleanString(str);
+                if (str != "")
+                {
+                    HandleResponse(str);
+                    waitForServer = false;
+                }
+            }
+            catch (Exception) { }
     }
     public bool StartClient(string ip)
     {
@@ -35,14 +60,12 @@ public class Client : MonoBehaviour
             ipStr = ipStr.Substring(0, ipStr.Length - 1);
 
             IPAddress ipAddress = IPAddress.Parse(ipStr);
-            Debug.Log(ipAddress.ToString());
             IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
             socket = new Socket(ipAddress.AddressFamily,
                 SocketType.Stream, ProtocolType.Tcp);
             
             //Connect the socket to the server
             socket.Connect(remoteEP);
-            //SendMessage("0_attempt to connect");
             return SocketConnected(socket);
         }
         catch
@@ -70,13 +93,16 @@ public class Client : MonoBehaviour
         try
         {
             socket.Send(Encoding.ASCII.GetBytes(msg));
-            waitForServer = true;
         }
-        catch (Exception ex)
+        catch
         {
             CloseClient();
             StartClient(ipStr);
         }
+    }
+    public void SetWaitForServer(bool isWaitForServer)
+    {
+        waitForServer = isWaitForServer;
     }
     public string CleanString(string str)
     {
@@ -89,26 +115,22 @@ public class Client : MonoBehaviour
         }
         return newFen;
     }
-    public void Update()
+    public string SendAndWaitForResponce(string msg)
     {
-        if (SceneManager.GetActiveScene().name == "EnterIP")
-            return;
+        waitForServer = false;
+        SendMsg(msg);
 
         byte[] bytes = new byte[1024];
-        if (waitForServer)
-            try
-            {
-                // Receive the response from the remote device.
-                int bytesRec = socket.Receive(bytes);
-                string str = Encoding.ASCII.GetString(bytes);
-                str = CleanString(str);
-                if (str != "")
-                {
-                    HandleResponse(str);
-                    waitForServer = false;
-                }
-            }
-            catch (Exception) { }
+        int bytesRec = socket.Receive(bytes);
+        string str = Encoding.ASCII.GetString(bytes);
+        while (str == "")
+        {
+            bytes = new byte[1024];
+            bytesRec = socket.Receive(bytes);
+            str = Encoding.ASCII.GetString(bytes);
+        }
+        
+        return str;
     }
     public bool HandleResponse(string str)
     {
@@ -128,5 +150,24 @@ public class Client : MonoBehaviour
         {
             return false;
         }
+    }
+    public bool Login(string username, string password)
+    {
+        //returns if found user and correct password (only both)
+        string toSend = string.Format("2_{0}_{1}", username, password);
+        string recivedStr = SendAndWaitForResponce(toSend);
+        string answerNumber = recivedStr.Split('_')[0];
+        return answerNumber == "9";
+    }
+    public bool SignUp(string username, string password)
+    {
+        //returns if successful SignUp
+        string toSend = string.Format("3_{0}_{1}", username, password);
+        string recivedStr = SendAndWaitForResponce(toSend);
+        //TODO
+        //make 8 successful creation and 7 an unsuccsesful
+        Debug.Log(recivedStr);
+        string answerNumber = recivedStr.Split('_')[0];
+        return answerNumber == "7";
     }
 }

@@ -59,10 +59,12 @@
     <Compile Include="Assets\Scripts\core\Move.cs" />
     <Compile Include="Assets\Scripts\Client.cs" />
     <Compile Include="Assets\Scripts\MovePlate.cs" />
+    <Compile Include="Assets\Scripts\SignUpManager.cs" />
     <Compile Include="Assets\Scripts\core\Point.cs" />
     <Compile Include="Assets\Scripts\Piece.cs" />
     <Compile Include="Assets\Scripts\Game.cs" />
-    <Compile Include="Assets\IPManager.cs" />
+    <Compile Include="Assets\Scripts\LoginManager.cs" />
+    <Compile Include="Assets\Scripts\IPManager.cs" />
     <Compile Include="Assets\Scripts\core\BasePiece.cs" />
     <Compile Include="Assets\Scripts\core\Board.cs" />
   </ItemGroup>

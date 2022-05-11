@@ -7,39 +7,28 @@ using UnityEngine.SceneManagement;
 
 public class IPManager : MonoBehaviour
 {
-    private string ip = "";
     public TextMeshProUGUI text;
+    public Text wrongIP;
     private void Start()
     {
-
+        wrongIP.gameObject.SetActive(false);
     }
     public void AttemptToConnect()
     {
         string ip = text.text;
         GameObject network = GameObject.FindGameObjectWithTag("NetworkManager");
-        bool temp = network.GetComponent<Client>().StartClient(ip);
-        Debug.Log(temp);
-        if (temp)
+        bool isValidServerIP = network.GetComponent<Client>().StartClient(ip);
+        if (isValidServerIP)
             SceneManager.LoadScene("Login");
         else
         {
             //if couldnt connect to client
-
+            wrongIP.gameObject.SetActive(true);
         }
-
     }
     private void Update()
     {
         if (Input.GetKeyDown("enter"))
-            AttemptToConnect();
+           AttemptToConnect();
     }
-    public void SetIP()
-    {
-        //TODO:
-        //add condition if the ip cant connect
-        ip = text.text;
-        SceneManager.LoadScene("Game");
-        
-    }
-    public string GetIP() => ip;
 }

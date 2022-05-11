@@ -72,7 +72,7 @@ class Program
     }
     public static void HandleClient(Socket clientSocket, DBManager db)
     {
-        int dbUserID = 0; // to get
+        int userID = 0; // to get
         AiBoard board = new AiBoard();
         try
         {
@@ -88,8 +88,56 @@ class Program
                     int bytesRec = clientSocket.Receive(bytes);
                     data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
                     Console.WriteLine("{0}: {1}", Thread.CurrentThread.Name, data);
-                    msg = Encoding.ASCII.GetBytes(AnalizingMsg(data, board, db, 5));//change 55555555555555555555
-                    clientSocket.Send(msg);
+                    string msgToSend = "";
+                    try
+                    {
+                        string[] arr = data.Split('_');
+                        if (arr[0] == "1")
+                        {
+                            Move m = new Move(arr[1], arr[2]);
+                            db.AddMove(m, userID);
+                            board.MakeMove(m);
+                            Move bestMove = Ai.GetBestMove(board);
+                            board.MakeMove(bestMove);
+                            msgToSend = string.Format("1_{}", bestMove.ToString());
+                        }
+                        else if (arr[0] == "2")
+                        {
+                            int tempId = db.GetUserID(arr[1], arr[2]);
+                            if (tempId == -1 || tempId == 0)
+                                msgToSend = "10_wrong user or password";
+                            else
+                            {
+                                userID = tempId;
+                                msgToSend = "9_ok";
+                            }
+                        }
+                        else if (arr[0] == "3")
+                        {
+                            db.CreateUser(arr[1], arr[2]);
+                            int tempId = db.GetUserID(arr[1], arr[2]);
+                            if (tempId == -1 || tempId == 0)
+                            {
+                                msgToSend = "8_user taken";
+                            }
+                            else
+                            {
+                                userID = tempId;
+                                msgToSend = "7_ok";
+                            }
+                        }
+                        else
+                            msgToSend = "11_msg not in format";
+                    }
+                    catch
+                    {
+                        msgToSend = "11_msg not in format";
+                    }
+                    finally
+                    {
+                        Console.WriteLine(msgToSend);
+                        clientSocket.Send(Encoding.ASCII.GetBytes(msgToSend));
+                    }
                 }
                 Thread.Sleep(100);
             }
@@ -99,27 +147,6 @@ class Program
             clientSocket.Shutdown(SocketShutdown.Both);
             clientSocket.Close();
             Console.WriteLine("close");
-        }
-    }
-    private static string AnalizingMsg(string msg, AiBoard board, DBManager db, int id)
-    {
-        try
-        {
-            string[] arr = msg.Split('_');
-            if (arr[0] == "1")
-            {
-                Move m = new Move(arr[1], arr[2]);
-                db.AddMove(m, id);
-                board.MakeMove(m);
-                Move bestMove = Ai.GetBestMove(board);
-                board.MakeMove(bestMove);
-                return "1_" + bestMove.ToString();
-            }
-            return "11_msg not in format";
-        }
-        catch
-        {
-            return "11_disconected because timeout";
         }
     }
     

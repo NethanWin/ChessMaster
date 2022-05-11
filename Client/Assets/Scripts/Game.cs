@@ -15,7 +15,19 @@ public class Game : MonoBehaviour
 
     public bool isWhiteMoving = false;
     public bool isBlackMoving = false;
-
+    public void Start()
+    {
+        SceneManager.UnloadSceneAsync("Login");
+        BuildBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+    }
+    public void Update()
+    {
+        if (gameOver == true && Input.GetMouseButtonDown(0))
+        {
+            gameOver = false;
+            SceneManager.LoadScene("Game");
+        }
+    }
     public string GetBoard()
     {
         string fen = "";
@@ -117,18 +129,6 @@ public class Game : MonoBehaviour
                 return ("Pawn", isBlack);
             default:
                 return ("Pawn", isBlack);
-        }
-    }
-    void Start()
-    {
-        BuildBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-    }
-    public void Update()
-    {
-        if (gameOver == true && Input.GetMouseButtonDown(0))
-        {
-            gameOver = false;
-            SceneManager.LoadScene("Game");
         }
     }
     public GameObject Create(string name, Point p)

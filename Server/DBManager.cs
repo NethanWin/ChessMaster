@@ -64,7 +64,7 @@ public class DBManager
     }
     public void AddMove(Move move, int id)
     {
-        //add the move to the move list in the game field (string manipulation)
+        //Add the move to the move list in the game field (string manipulation)
         string statement = String.Format("SELECT * FROM chessUsers WHERE id={0}", id);
         SQLiteDataReader reader = ExecuteReadQuery(statement);
 

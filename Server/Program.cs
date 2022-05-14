@@ -33,6 +33,8 @@ class Program
         //main command which handles new clients and creates thread for each
         List<Thread> threads = new List<Thread>();
         DBManager db = new DBManager();
+        Dictionary<int, int> idThreades = new Dictionary<int, int>();
+        //id, thread id
 
         //setup Host
         IPAddress ipAddress = GetHostsIP();
@@ -41,6 +43,7 @@ class Program
         Console.WriteLine();
         Console.WriteLine("Please copy this text to the client's IP field:");
         Console.WriteLine(ipAddress.ToString());
+        Console.WriteLine();
         IPEndPoint localEndPoint = new IPEndPoint(ipAddress, SERVER_PORT);
 
         // Create a Socket that will use Tcp protocol
@@ -51,8 +54,7 @@ class Program
         {
             serverSocket.Listen(10);
             Socket handler = serverSocket.Accept();
-            RemoveFinishedThreads(threads);
-            threads.Add(new Thread(() => HandleClient(handler, db)) { Name = "t" + id });
+            threads.Add(new Thread(() => HandleClient(handler, db, idThreades, threads)) { Name = "t" + id });
             threads.Last().Start();
             id++;
         }
@@ -70,7 +72,7 @@ class Program
                 threads.Remove(t);
         }
     }
-    public static void HandleClient(Socket clientSocket, DBManager db)
+    public static void HandleClient(Socket clientSocket, DBManager db, Dictionary<int, int> idThreades, List<Thread> threads)
     {
         int userID = 0; // to get
         AiBoard board = new AiBoard();
@@ -105,10 +107,13 @@ class Program
                         {
                             int tempId = db.GetUserID(arr[1], arr[2]);
                             if (tempId == -1 || tempId == 0)
+                            {
                                 msgToSend = "10_wrong user or password";
+                            }
                             else
                             {
                                 userID = tempId;
+                                ReplaceThreads(userID, Thread.CurrentThread.Name, idThreades, threads);
                                 msgToSend = "9_ok";
                             }
                         }
@@ -129,8 +134,9 @@ class Program
                         else
                             msgToSend = "11_msg not in format";
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Console.WriteLine(ex);
                         msgToSend = "11_msg not in format";
                     }
                     finally
@@ -141,14 +147,50 @@ class Program
                 Thread.Sleep(100);
             }
         }
-        catch 
+        catch (SocketException ex)
         {
+            Console.WriteLine(ex);
             clientSocket.Shutdown(SocketShutdown.Both);
             clientSocket.Close();
-            Console.WriteLine("close");
+        }
+        finally 
+        { 
+            clientSocket.Close();
         }
     }
-    
+    public static void ReplaceThreads(int id, string currentThreadName, Dictionary<int, int> idThreades, List<Thread> threads)
+    {
+        //Remove threads with this id on db
+        int threadInt;
+        if (idThreades.TryGetValue(id, out threadInt))
+        { 
+            Thread removeThread = null;
+            foreach (Thread t in threads)
+            {
+                if (t.Name == "t" + threadInt)
+                {
+                    removeThread = t; break;
+                }
+            }
+            if (removeThread != null)
+            {
+                Console.WriteLine("closing: " + removeThread.Name);
+                removeThread.Abort();
+                foreach (Thread t in threads)
+                    if (t == removeThread)
+                    {
+                        threads.Remove(t);
+                        break;
+                    }
+            }
+        }
+        idThreades[id] = currentThreadName[1] - '0';
+    }
+    public static void CloseThread(int id, string currentThreadName, Dictionary<int, int> idThreades, List<Thread> threads)
+    {
+
+    }
+
     //Testing
     public static void MinmaxPerformanceTest()
     {

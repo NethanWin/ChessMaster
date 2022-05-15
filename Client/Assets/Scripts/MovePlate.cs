@@ -34,7 +34,7 @@ public class MovePlate : MonoBehaviour
             if (enemyChessPiece.name == "whiteKing")
                 game.Winner("black");
             if (enemyChessPiece.name == "blackKing")
-                game.Winner("white");   
+                game.Winner("white");
             Destroy(enemyChessPiece);
         }
 
@@ -48,7 +48,7 @@ public class MovePlate : MonoBehaviour
         game.DestroyAllMovePlates();
 
         client.SetWaitForServer(true);
-        client.SendMsg(string.Format("1_{0}_{1}", tempP/*piece.GetPBoard()*/, pBoard));
+        client.SendMsg(string.Format("1_{0}_{1}", tempP, pBoard));
     }
     public void SetPoint(Point p)
     {

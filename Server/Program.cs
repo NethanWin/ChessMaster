@@ -39,7 +39,6 @@ class Program
         Dictionary<int, Socket> threadIDSocket= new Dictionary<int, Socket>();
         //threadID, socket
 
-
         //setup Host
         IPAddress ipAddress = GetHostsIP();
         Console.WriteLine("Welcome to ChessMaster!");
@@ -222,7 +221,8 @@ class Program
         Console.WriteLine("closing: " + thread.Name);
         int threadID = (int)thread.Name[1] - '0';
         Socket socket = threadIDSocket[threadID];
-        socket.Send(Encoding.ASCII.GetBytes("6_closed"));
+        if (socket == null && socket.Connected)
+            socket.Send(Encoding.ASCII.GetBytes("6_closed"));
         thread.Abort();
         threads.Remove(thread);
         threadIDSocket.Remove(threadID);
@@ -258,7 +258,10 @@ class Program
     }
     public static void TestEvaluation()
     {
-        AiBoard b = new AiBoard("8/pppp4/8/8/8/8/8/8");
-        Console.WriteLine(b.EvaluateBoard(true));
+        AiBoard b = new AiBoard("8/8/8/8/8/8/P7/k7");
+        Move m = Ai.GetBestMove(b);
+        b.MakeMove(m);
+        Console.WriteLine();
+        Console.WriteLine(b.EvaluateBoard(false));
     }
 }

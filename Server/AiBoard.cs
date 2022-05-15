@@ -86,7 +86,7 @@ class AiBoard : Board
     -50,-30,-30,-30,-30,-30,-30,-50*/
     public AiBoard() : base() { }
     public AiBoard(string fen) : base(fen) { }
-    public Int16 EvaluatePiece(bool whiteToPlay, BasePiece p, int x, int y)
+    public int EvaluatePiece(bool whiteToPlay, BasePiece p, int x, int y)
     {
         //returns the value of a piece acording to it's position
         PType type = p.GetPType();
@@ -94,21 +94,24 @@ class AiBoard : Board
             y = (byte)(7 - y);
         switch (type)
         {
-            case PType.King: return king[y, x];
-            case PType.Queen: return queen[y, x];
-            case PType.Rook: return rook[y, x];
-            case PType.Bishop: return bishop[y, x];
-            case PType.Knight: return knight[y, x];
-            case PType.Pawn: return pawn[y, x];
+            case PType.King: return 20000 + king[y, x];
+            case PType.Queen: return 900 + queen[y, x];
+            case PType.Rook: return 500 + rook[y, x];
+            case PType.Bishop: return 330 + bishop[y, x];
+            case PType.Knight: return 320 + knight[y, x];
+            case PType.Pawn: return 100 + pawn[y, x];
             default: return 0;
         }
     }
-    public Int16 EvaluateBoard(bool whiteToPlay)
+    public int EvaluateBoard(bool whiteToPlay)
     {
         //evaluate the points for the board
-        Int16 count = 0;
+        int count = 0;
         foreach (BasePiece p in board)
             if (p != null)
+                if (p.GetIsBlack())
+                    count -= EvaluatePiece(whiteToPlay, p, p.GetX(), p.GetY());
+                else
                 count += EvaluatePiece(whiteToPlay, p, p.GetX(), p.GetY());
         return count;
     }

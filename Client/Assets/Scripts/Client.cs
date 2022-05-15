@@ -60,25 +60,50 @@ public class Client : MonoBehaviour
         try
         {
             ipStr = ipStr.Substring(0, ipStr.Length - 1);
-
             IPAddress ipAddress = IPAddress.Parse(ipStr);
+
             IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
+
             socket = new Socket(ipAddress.AddressFamily,
                 SocketType.Stream, ProtocolType.Tcp);
-            
+
             //Connect the socket to the server
-            socket.Connect(remoteEP);
-            return SocketConnected(socket);
+            bool isValidIP = IsValidIP(ipStr, 11000);
+            if (isValidIP)
+                socket.Connect(remoteEP);
+            return isValidIP;
         }
         catch
         {
             return false;
         }
     }
+    public static bool IsValidIP(string ip, int port)
+    {
+        try
+        {
+            //using (var client = new TcpClient(ip, port))
+            using (var client = new TcpClient())
+            {
+                client.ReceiveTimeout = 1;
+                client.SendTimeout = 1;
+                client.Connect(ip, port);
+                return true;
+            }
+        }
+        catch (SocketException ex)
+        {
+            Debug.Log(ex.ToString());
+            return false;
+        }
+    }
     static bool SocketConnected(Socket s)
     {
+        Debug.Log("test1");
         bool part1 = s.Poll(1000, SelectMode.SelectRead);
+        Debug.Log("test2");
         bool part2 = (s.Available == 0);
+        Debug.Log("test3");
         if (part1 && part2)
             return false;
         else
@@ -148,6 +173,7 @@ public class Client : MonoBehaviour
             }
             if (arr[0] == "6")
             {
+                Destroy(GameObject.FindGameObjectWithTag("NetworkManager"));
                 SceneManager.LoadScene("EnterIP");
             }
             return false;
@@ -159,14 +185,16 @@ public class Client : MonoBehaviour
     }
     public bool Login(string username, string password)
     {
-        //returns if found user and correct password (only both) if true returns the 
+        //returns if found user and correct password (only both)
         string toSend = string.Format("2_{0}_{1}", username, password);
         string recivedStr = SendAndWaitForResponce(toSend);
         string[] arr = recivedStr.Split('_');
         string answerNumber = arr[0];
-        Debug.Log(FEN);
-        FEN = arr[2];
-        FEN = CleanFEN(FEN);
+        if (answerNumber == "9")
+        {
+            FEN = arr[2];
+            FEN = CleanFEN(FEN);
+        }
         return answerNumber == "9";
     }
     public bool SignUp(string username, string password)

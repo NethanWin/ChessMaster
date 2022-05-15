@@ -9,7 +9,7 @@ class Ai
     public static int depth;
     public static Move GetBestMoveOne(AiBoard board, bool isWhite)
     {
-        List<Move> possibleMoves = board.GenerateMoves(isWhite);
+        List<Move> possibleMoves = board.GenerateMoves(!isWhite);
         Move bestMove = null;
         double BestMoveValue = double.MinValue;
 
@@ -28,6 +28,52 @@ class Ai
         Console.WriteLine(BestMoveValue);
         return bestMove;
     }
+    public static Move GetBestMove(AiBoard board)
+    {
+        Ai.depth = 3;
+        return GetBestMove(Ai.depth, board, false, false).Item2;
+    }
+    private static (double, Move) GetBestMove(int depth, AiBoard board,
+                                bool isWhite, bool isMaximizingPlayer)
+    {
+        if (depth == 0)
+        {
+            return (board.EvaluateBoard(isWhite), null);
+        }
+
+        Move bestMove = null;
+        List<Move> possibleMoves = board.GenerateMoves(!isWhite);
+        double bestMoveValue = isMaximizingPlayer ? double.MinValue
+                                                  : double.MaxValue;
+        foreach (Move move in possibleMoves)
+        {
+            board.MakeMove(move);
+
+            double value = GetBestMove(depth - 1, board, isWhite, !isMaximizingPlayer).Item1;
+
+            if (isMaximizingPlayer)
+            {
+                if (value > bestMoveValue)
+                {
+                    bestMoveValue = value;
+                    bestMove = move;
+                }
+            }
+            else
+            {
+                if (value < bestMoveValue)
+                {
+                    bestMoveValue = value;
+                    bestMove = move;
+                }
+            }
+            board.UndoMove(move);
+        }
+        if (depth == Ai.depth)
+            return (bestMoveValue, bestMove);
+        return (bestMoveValue, null);
+    }
+    /*
     public static Move GetBestMove(AiBoard board)
     {
         Ai.depth = 3;
@@ -69,5 +115,5 @@ class Ai
         if (depth == Ai.depth)
             return (bestMoveValue, bestMove);
         return (bestMoveValue, null);
-    }
+    }*/
 }

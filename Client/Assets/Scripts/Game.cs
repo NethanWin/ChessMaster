@@ -26,11 +26,13 @@ public class Game : MonoBehaviour
         if (gameOver == true && Input.GetMouseButtonDown(0))
         {
             gameOver = false;
+            client.SendMessage("4_end of game");
             SceneManager.LoadScene("Game");
         }
     }
     public void Restart()
     {
+        gameOver = false;
         string msg = client.SendAndWaitForResponce("4_restart");
         BuildBoard(msg.Split('_')[2]);
     }
@@ -216,23 +218,21 @@ public class Game : MonoBehaviour
         {
             GameObject pieceRefrence = GetGameObjectOnPosition(m.GetStartPoint());
             Piece piece = pieceRefrence.GetComponent<Piece>();
-            //testing
-            /*GameObject enemyChessPiece = GetGameObjectOnPosition(m.GetTargetPoint());
-            if (enemyChessPiece != null)
-                Destroy(enemyChessPiece);
-            */
-            //end testing
-            
-            
-            SetEmptyPosition(piece.GetPBoard());
 
+            GameObject enemyChessPiece = GetGameObjectOnPosition(m.GetTargetPoint());
+            if (enemyChessPiece != null)
+            {
+                Debug.Log(pieceRefrence.name + " -> " + enemyChessPiece.name);
+                if (enemyChessPiece.name == "whiteKing")
+                    Winner("black");
+                if (enemyChessPiece.name == "blackKing")
+                    Winner("white");
+                Destroy(enemyChessPiece);
+            }
+            SetEmptyPosition(piece.GetPBoard());
             piece.SetPBoard(new Point(m.GetTargetPoint()));
             piece.MoveToTarget();
             SetPosition(pieceRefrence);
-            //if (pieceToDestroy != null)
-            //{
-            //    Destroy(pieceToDestroy);
-            //}
             return true;
         }
         catch
@@ -244,6 +244,7 @@ public class Game : MonoBehaviour
     {
         client.SendMsg("7_close");
         client.SetWaitForServer(false);
+        Destroy(GameObject.FindGameObjectWithTag("NetworkManager"));
         SceneManager.LoadScene("EnterIP");
     }
 }

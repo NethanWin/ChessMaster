@@ -49,14 +49,22 @@ public class Piece : MonoBehaviour
         currentP = GetUnityCoords(pBoard);
         if (pos.x == currentP.x && pos.y == currentP.y && isMoving)
         {
-            game.NextTurn();            
+            game.NextTurn();
             isMoving = false;
-            transform.position.Set(pos.x, pos.y, -0.1f);
+            transform.position.Set(currentP.x, currentP.y, -0.1f);
+            Debug.Log("1");
+            Debug.Log("target " + currentP.ToString());
+            Debug.Log("pos " + pos.ToString());
+            Debug.Log(game.GetWhiteTurn());
         }
         else if (isMoving && (isWhite == game.GetWhiteTurn()))
         {
+            Debug.Log("2");
+            Debug.Log("target " + currentP.ToString());
+            Debug.Log("pos " + pos.ToString());
+            Debug.Log(game.GetWhiteTurn());
             float step = baseSpeed * Time.deltaTime;
-            transform.position =  Vector3.MoveTowards(pos, new Vector3(currentP.x, currentP.y, -1.0f), step);
+            transform.position = Vector3.MoveTowards(pos, new Vector3(currentP.x, currentP.y, -1.0f), step);
         }
     }
     public static PType GetPType(string name)

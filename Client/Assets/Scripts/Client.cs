@@ -132,7 +132,7 @@ public class Client : MonoBehaviour
             str = Encoding.ASCII.GetString(bytes);
         }
         
-        return str;
+        return CleanFEN(str);
     }
     public bool HandleResponse(string str)
     {
@@ -145,6 +145,10 @@ public class Client : MonoBehaviour
                 Move m = new Move(arr[1], arr[2]);
                 game.MakeMove(m);
                 return true;
+            }
+            if (arr[0] == "6")
+            {
+                SceneManager.LoadScene("EnterIP");
             }
             return false;
         }
@@ -160,6 +164,7 @@ public class Client : MonoBehaviour
         string recivedStr = SendAndWaitForResponce(toSend);
         string[] arr = recivedStr.Split('_');
         string answerNumber = arr[0];
+        Debug.Log(FEN);
         FEN = arr[2];
         FEN = CleanFEN(FEN);
         return answerNumber == "9";

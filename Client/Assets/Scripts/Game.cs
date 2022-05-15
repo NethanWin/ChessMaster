@@ -10,6 +10,7 @@ public class Game : MonoBehaviour
     public bool waitForServer = false;
     public GameObject chesspiece;
     private GameObject[,] board = new GameObject[8, 8];
+    Client client;
     private bool whiteTurn = true;
     private bool gameOver = false;
 
@@ -17,7 +18,7 @@ public class Game : MonoBehaviour
     public bool isBlackMoving = false;
     public void Start()
     {
-        Client client = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<Client>();
+        client = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<Client>();
         BuildBoard(client.GetFEN);
     }
     public void Update()
@@ -27,6 +28,11 @@ public class Game : MonoBehaviour
             gameOver = false;
             SceneManager.LoadScene("Game");
         }
+    }
+    public void Restart()
+    {
+        string msg = client.SendAndWaitForResponce("4_restart");
+        BuildBoard(msg.Split('_')[2]);
     }
     public string GetBoard()
     {
@@ -59,9 +65,9 @@ public class Game : MonoBehaviour
     {
         fen = string.Concat(fen.Where(c => !char.IsWhiteSpace(c)));
         foreach (GameObject go in board)
-        {
             Destroy(go);
-        }
+        foreach (GameObject movePlate in GameObject.FindGameObjectsWithTag("MovePlate"))
+            Destroy(movePlate);
         int y = 7;
         int x = 0;
         foreach (char ch in fen)
@@ -233,5 +239,11 @@ public class Game : MonoBehaviour
         {
             return false;
         }
+    }
+    public void ReturnToManu()
+    {
+        client.SendMsg("7_close");
+        client.SetWaitForServer(false);
+        SceneManager.LoadScene("EnterIP");
     }
 }

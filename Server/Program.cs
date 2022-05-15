@@ -11,6 +11,7 @@ using System.Net.Sockets;
 
 class Program
 {
+    public static Socket s = null;
     public const int SERVER_PORT = 11000;
     public static void Main(string[] args)
     {
@@ -35,6 +36,9 @@ class Program
         DBManager db = new DBManager();
         Dictionary<int, int> idThreades = new Dictionary<int, int>();
         //id, thread id
+        Dictionary<int, Socket> threadIDSocket= new Dictionary<int, Socket>();
+        //threadID, socket
+
 
         //setup Host
         IPAddress ipAddress = GetHostsIP();
@@ -54,7 +58,8 @@ class Program
         {
             serverSocket.Listen(10);
             Socket handler = serverSocket.Accept();
-            threads.Add(new Thread(() => HandleClient(handler, db, idThreades, threads)) { Name = "t" + id });
+            threads.Add(new Thread(() => HandleClient(handler, db, idThreades, threads, threadIDSocket)) { Name = "t" + id });
+            threadIDSocket[id] = handler;
             threads.Last().Start();
             id++;
         }
@@ -72,7 +77,7 @@ class Program
                 threads.Remove(t);
         }
     }
-    public static void HandleClient(Socket clientSocket, DBManager db, Dictionary<int, int> idThreades, List<Thread> threads)
+    public static void HandleClient(Socket clientSocket, DBManager db, Dictionary<int, int> idThreades, List<Thread> threads,Dictionary<int, Socket> threadIDSocket)
     {
         int userID = 0; // to get
         AiBoard board = new AiBoard();
@@ -114,7 +119,7 @@ class Program
                             else
                             {
                                 userID = tempId;
-                                ReplaceThreads(userID, Thread.CurrentThread.Name, idThreades, threads);
+                                ReplaceThreads(userID, Thread.CurrentThread.Name, idThreades, threads, threadIDSocket);
                                 List<Move> moves = db.GetGameMoves(userID);
                                 board = new AiBoard();
                                 foreach (Move move in moves)
@@ -139,7 +144,7 @@ class Program
                         else if (arr[0] == "4")
                         {
                             string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-                            if (arr[1] == "save")
+                            if (arr[1] != "restart")
                             {
                                 //end of game
                                 db.SetCurrentGameToLast(userID);
@@ -151,6 +156,11 @@ class Program
                             }
                             board = new AiBoard();
                             msgToSend = "4_ok_" + FEN;
+                        }
+                        else if (arr[0] == "7")
+                        {
+                            threads.Remove(Thread.CurrentThread);
+                           // Thread.CurrentThread.Abort();
                         }
                         else
                             msgToSend = "11_msg not in format";
@@ -179,7 +189,7 @@ class Program
             clientSocket.Close();
         }
     }
-    public static void ReplaceThreads(int id, string currentThreadName, Dictionary<int, int> idThreades, List<Thread> threads)
+    public static void ReplaceThreads(int id, string currentThreadName, Dictionary<int, int> idThreades, List<Thread> threads, Dictionary<int, Socket> threadIDSocket)
     {
         //Remove threads with this id on db
         int threadInt;
@@ -193,19 +203,29 @@ class Program
                     removeThread = t; break;
                 }
             }
+            RemoveThread(removeThread, threads, threadIDSocket);
             if (removeThread != null)
             {
-                Console.WriteLine("closing: " + removeThread.Name);
+             /*   Console.WriteLine("closing: " + removeThread.Name);
+                Socket socket = threadIDSocket[(int)removeThread.Name[1] - '0'];
+                socket.Send(Encoding.ASCII.GetBytes("6_closed"));
                 removeThread.Abort();
-                foreach (Thread t in threads)
-                    if (t == removeThread)
-                    {
-                        threads.Remove(t);
-                        break;
-                    }
+                threads.Remove(removeThread);*/
             }
         }
         idThreades[id] = currentThreadName[1] - '0';
+    }
+    public static void RemoveThread(Thread thread, List<Thread> threads, Dictionary<int, Socket> threadIDSocket)
+    {
+        if (thread == null)
+            return;
+        Console.WriteLine("closing: " + thread.Name);
+        int threadID = (int)thread.Name[1] - '0';
+        Socket socket = threadIDSocket[threadID];
+        socket.Send(Encoding.ASCII.GetBytes("6_closed"));
+        thread.Abort();
+        threads.Remove(thread);
+        threadIDSocket.Remove(threadID);
     }
 
     //Testing

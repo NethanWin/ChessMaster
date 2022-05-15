@@ -76,7 +76,7 @@ public class DBManager
             ExecuteVoidQuery(statement);
         }
     }
-    public List<Move> GetGameMoves(int id, bool getCurrentOrLastGame)
+    public List<Move> GetGameMoves(int id, bool getCurrentOrLastGame = true)
     {
         string statement = string.Format("SELECT * FROM chessUsers WHERE id={0}", id);
         SQLiteDataReader reader = ExecuteReadQuery(statement);
@@ -98,6 +98,7 @@ public class DBManager
     }
     public void SetCurrentGameToLast(int id)
     {
+        //Moves to currentGameMoves to lastGameMove and sets it to ""
         string statement = string.Format("SELECT * FROM chessUsers WHERE id={0}", id);
         SQLiteDataReader reader = ExecuteReadQuery(statement);
         string currentGame = "";
@@ -107,6 +108,12 @@ public class DBManager
         statement = String.Format("UPDATE chessUsers SET currentGameMoves='{0}' WHERE id='{1}'", "", id);
         ExecuteVoidQuery(statement);
         statement = String.Format("UPDATE chessUsers SET lastGameMoves='{0}' WHERE id='{1}'", currentGame, id);
+        ExecuteVoidQuery(statement);
+    }
+    public void ResetCurrentGame(int id)
+    {
+        //Sets currentGameMoves to ""
+        string statement = String.Format("UPDATE chessUsers SET currentGameMoves='{0}' WHERE id='{1}'", "", id);
         ExecuteVoidQuery(statement);
     }
     private bool IsTableExist()

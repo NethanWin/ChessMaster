@@ -101,6 +101,7 @@ class Program
                             board.MakeMove(m);
                             Move bestMove = Ai.GetBestMove(board);
                             board.MakeMove(bestMove);
+                            db.AddMove(bestMove, userID);
                             msgToSend = string.Format("1_{0}", bestMove.ToString());
                         }
                         else if (arr[0] == "2")
@@ -114,7 +115,11 @@ class Program
                             {
                                 userID = tempId;
                                 ReplaceThreads(userID, Thread.CurrentThread.Name, idThreades, threads);
-                                msgToSend = "9_ok";
+                                List<Move> moves = db.GetGameMoves(userID);
+                                board = new AiBoard();
+                                foreach (Move move in moves)
+                                    board.MakeMove(move);
+                                msgToSend = "9_ok_" + board.GetFen();
                             }
                         }
                         else if (arr[0] == "3")
@@ -130,6 +135,22 @@ class Program
                                 userID = tempId;
                                 msgToSend = "7_ok";
                             }
+                        }
+                        else if (arr[0] == "4")
+                        {
+                            string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+                            if (arr[1] == "save")
+                            {
+                                //end of game
+                                db.SetCurrentGameToLast(userID);
+                            }
+                            else
+                            {
+                                //reset button
+                                db.ResetCurrentGame(userID);
+                            }
+                            board = new AiBoard();
+                            msgToSend = "4_ok_" + FEN;
                         }
                         else
                             msgToSend = "11_msg not in format";
@@ -185,10 +206,6 @@ class Program
             }
         }
         idThreades[id] = currentThreadName[1] - '0';
-    }
-    public static void CloseThread(int id, string currentThreadName, Dictionary<int, int> idThreades, List<Thread> threads)
-    {
-
     }
 
     //Testing

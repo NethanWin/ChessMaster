@@ -19,6 +19,7 @@ public class Client : MonoBehaviour
     static bool waitForServer;
     static Socket socket;
     static Game game;
+    static string FEN;
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (SceneManager.GetActiveScene().name == "Game")
@@ -154,10 +155,13 @@ public class Client : MonoBehaviour
     }
     public bool Login(string username, string password)
     {
-        //returns if found user and correct password (only both)
+        //returns if found user and correct password (only both) if true returns the 
         string toSend = string.Format("2_{0}_{1}", username, password);
         string recivedStr = SendAndWaitForResponce(toSend);
-        string answerNumber = recivedStr.Split('_')[0];
+        string[] arr = recivedStr.Split('_');
+        string answerNumber = arr[0];
+        FEN = arr[2];
+        FEN = CleanFEN(FEN);
         return answerNumber == "9";
     }
     public bool SignUp(string username, string password)
@@ -167,8 +171,19 @@ public class Client : MonoBehaviour
         string recivedStr = SendAndWaitForResponce(toSend);
         //TODO
         //make 8 successful creation and 7 an unsuccsesful
-        Debug.Log(recivedStr);
         string answerNumber = recivedStr.Split('_')[0];
         return answerNumber == "7";
+    }
+    public string GetFEN => FEN;
+    public static string CleanFEN(string str)
+    {
+        string temp = "";
+        foreach (char ch in str)
+        {
+            if ((int)ch == 0)
+                break;
+            temp += ch;
+        }
+        return temp;
     }
 }

@@ -17,8 +17,8 @@ public class Game : MonoBehaviour
     public bool isBlackMoving = false;
     public void Start()
     {
-        //SceneManager.UnloadSceneAsync("Login");
-        BuildBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        Client client = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<Client>();
+        BuildBoard(client.GetFEN);
     }
     public void Update()
     {
@@ -57,7 +57,7 @@ public class Game : MonoBehaviour
     }
     public void BuildBoard(string fen)
     {
-        fen = String.Concat(fen.Where(c => !Char.IsWhiteSpace(c)));
+        fen = string.Concat(fen.Where(c => !char.IsWhiteSpace(c)));
         foreach (GameObject go in board)
         {
             Destroy(go);
@@ -77,13 +77,16 @@ public class Game : MonoBehaviour
             }
             else
             {
-                //Add piece
-                string ch2 = ch.ToString();
-                string name; bool isBlack;
-                (name, isBlack) = GetPTypeFromChar(ch);
-                name = (isBlack ? "black" : "white") + name;
-                SetPosition(Create(name, new Point(x, y)));
-                x++;
+                if (ch != ' ')
+                { 
+                    //Add piece
+                    string ch2 = ch.ToString();
+                    string name; bool isBlack;
+                    (name, isBlack) = GetPTypeFromChar(ch);
+                    name = (isBlack ? "black" : "white") + name;
+                    SetPosition(Create(name, new Point(x, y)));
+                    x++;
+                }
             }
         }
     }

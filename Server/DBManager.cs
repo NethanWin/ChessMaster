@@ -30,7 +30,7 @@ public class DBManager
     }
     public bool CreateUser(string user, string password)
     {
-        //create new user and returns if the user is taken
+        //create new user and returns if the user is not taken
         string statement = string.Format("SELECT COUNT(1) FROM chessUsers WHERE username='{0}'", user);
         SQLiteDataReader reader = ExecuteReadQuery(statement);
 

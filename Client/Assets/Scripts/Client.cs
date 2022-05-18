@@ -202,8 +202,7 @@ public class Client : MonoBehaviour
         //returns if successful SignUp
         string toSend = string.Format("3_{0}_{1}", username, password);
         string recivedStr = SendAndWaitForResponce(toSend);
-        //TODO
-        //make 8 successful creation and 7 an unsuccsesful
+        Debug.Log(recivedStr);
         string answerNumber = recivedStr.Split('_')[0];
         return answerNumber == "7";
     }

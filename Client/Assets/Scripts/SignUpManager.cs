@@ -31,14 +31,11 @@ public class SignUpManager : MonoBehaviour
         {
             usernameTakenText.text = "User successfuly created :)";
             usernameTakenText.color = Color.green;
-           // usernameTakenText.gameObject.SetActive(true);
         }
         else
         {
             usernameTakenText.text = "Username already taken";
             usernameTakenText.color = Color.red;
-           // usernameTakenText.gameObject.SetActive(true);
-            
         }
     }
     public void LoadLoginScene()

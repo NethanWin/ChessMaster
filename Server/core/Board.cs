@@ -20,8 +20,8 @@ public class Board
         AddToBoard(new BasePiece(PType.Rook, false, new Point(0,0)));
         AddToBoard(new BasePiece(PType.Knight, false, new Point(1,0)));
         AddToBoard(new BasePiece(PType.Bishop, false, new Point(2,0)));
-        AddToBoard(new BasePiece(PType.King, false, new Point(3,0)));
-        AddToBoard(new BasePiece(PType.Queen, false, new Point(4,0)));
+        AddToBoard(new BasePiece(PType.Queen, false, new Point(3,0)));
+        AddToBoard(new BasePiece(PType.King, false, new Point(4,0)));
         AddToBoard(new BasePiece(PType.Bishop, false, new Point(5,0)));
         AddToBoard(new BasePiece(PType.Knight, false, new Point(6,0)));
         AddToBoard(new BasePiece(PType.Rook, false, new Point(7,0)));

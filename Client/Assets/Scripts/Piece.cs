@@ -25,15 +25,14 @@ public class Piece : MonoBehaviour
     Point pBoard = new Point(0,0);
     Point currentP;
 
+    Client client;
 
-    
     // Variable to keep track of white or black isWhite
     bool isWhite;
 
     // References for the chessPieces sprites
     public Sprite blackQueen, blackKnight, blackBishop, blackKing, blackRook, blackPawn;
     public Sprite whiteQueen, whiteKnight, whiteBishop, whiteKing, whiteRook, whitePawn;
-
 
     void OnMouseUp()
     {
@@ -51,18 +50,12 @@ public class Piece : MonoBehaviour
         {
             game.NextTurn();
             isMoving = false;
-            transform.position.Set(currentP.x, currentP.y, -0.1f);
-            Debug.Log("1");
-            Debug.Log("target " + currentP.ToString());
-            Debug.Log("pos " + pos.ToString());
-            Debug.Log(game.GetWhiteTurn());
+            if (isWhite)
+                FindObjectOfType<Client>().GetComponent<Client>().SetWaitForServer(true);
+            //transform.position.Set(currentP.x, currentP.y, -0.1f);
         }
         else if (isMoving && (isWhite == game.GetWhiteTurn()))
         {
-            Debug.Log("2");
-            Debug.Log("target " + currentP.ToString());
-            Debug.Log("pos " + pos.ToString());
-            Debug.Log(game.GetWhiteTurn());
             float step = baseSpeed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(pos, new Vector3(currentP.x, currentP.y, -1.0f), step);
         }
@@ -148,7 +141,7 @@ public class Piece : MonoBehaviour
     {
         Point p = GetMovePlateUnityCoords(m.GetTargetPoint());
         GameObject movPlate = Instantiate(movePlate, new Vector3(p.x, p.y, -3.0f), Quaternion.identity);
-        movPlate.GetComponent<MovePlate>().SetVars(m, gameObject,  isAttackMove);
+        movPlate.GetComponent<MovePlate>().SetVars(m, gameObject,  isAttackMove, client);
     }
     public void SetPBoard(Point p)
     {

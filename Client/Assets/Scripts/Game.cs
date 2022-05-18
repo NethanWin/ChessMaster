@@ -25,15 +25,15 @@ public class Game : MonoBehaviour
     {
         if (gameOver == true && Input.GetMouseButtonDown(0))
         {
-            gameOver = false;
-            client.SendMessage("4_end of game");
-            SceneManager.LoadScene("Game");
+            Restart(true);
         }
     }
-    public void Restart()
+    public void Restart(bool isEndOfGame = false)
     {
         gameOver = false;
-        string msg = client.SendAndWaitForResponce("4_restart");
+        GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = false;
+        GameObject.FindGameObjectWithTag("RestartText").GetComponent<Text>().enabled = false;
+        string msg = client.SendAndWaitForResponce("4_" + (isEndOfGame ? "end of game" : "restart"));
         BuildBoard(msg.Split('_')[2]);
     }
     public string GetBoard()
@@ -176,7 +176,7 @@ public class Game : MonoBehaviour
     public bool GetWhiteTurn() => whiteTurn;
     public bool IsGameOver() => gameOver;
     public void NextTurn()
-    {
+    { 
         whiteTurn = !whiteTurn;
     }
     public void Winner(string playerWinner)
@@ -189,30 +189,6 @@ public class Game : MonoBehaviour
     }
     public bool MakeMove(Move m)
     {
-        /*
-        Piece piece = pieceObject.GetComponent<Piece>();
-        if (attack)
-        {
-            GameObject enemyChessPiece = game.GetGameObjectOnPosition(pBoard);
-
-            if (enemyChessPiece.name == "whiteKing")
-                game.Winner("black");
-            if (enemyChessPiece.name == "blackKing")
-                game.Winner("white");
-            Destroy(enemyChessPiece);
-        }
-
-        //set empty in the old piece's board
-
-        Point tempP = piece.GetPBoard();
-        game.SetEmptyPosition(piece.GetPBoard());
-        piece.SetPBoard(new Point(pBoard));
-        piece.MoveToTarget();
-        game.SetPosition(pieceObject);
-        game.DestroyAllMovePlates();
-        */
-
-
         //returns if successful
         try
         {
@@ -222,17 +198,16 @@ public class Game : MonoBehaviour
             GameObject enemyChessPiece = GetGameObjectOnPosition(m.GetTargetPoint());
             if (enemyChessPiece != null)
             {
-                Debug.Log(pieceRefrence.name + " -> " + enemyChessPiece.name);
                 if (enemyChessPiece.name == "whiteKing")
                     Winner("black");
                 if (enemyChessPiece.name == "blackKing")
                     Winner("white");
                 Destroy(enemyChessPiece);
             }
-            SetEmptyPosition(piece.GetPBoard());
+            SetEmptyPosition(m.GetStartPoint());
             piece.SetPBoard(new Point(m.GetTargetPoint()));
-            piece.MoveToTarget();
             SetPosition(pieceRefrence);
+            piece.MoveToTarget();
             return true;
         }
         catch

@@ -93,7 +93,6 @@ class Program
                 {
                     int bytesRec = clientSocket.Receive(bytes);
                     data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                    Console.WriteLine("{0}: {1}", Thread.CurrentThread.Name, data);
                     string msgToSend = "";
                     try
                     {
@@ -123,21 +122,28 @@ class Program
                                 board = new AiBoard();
                                 foreach (Move move in moves)
                                     board.MakeMove(move);
+                                Console.WriteLine(Thread.CurrentThread.Name + " sucssuful login");
                                 msgToSend = "9_ok_" + board.GetFen();
                             }
                         }
                         else if (arr[0] == "3")
                         {
-                            db.CreateUser(arr[1], arr[2]);
-                            int tempId = db.GetUserID(arr[1], arr[2]);
-                            if (tempId == -1 || tempId == 0)
+                            if (!db.CreateUser(arr[1], arr[2]))
                             {
                                 msgToSend = "8_user taken";
                             }
                             else
                             {
-                                userID = tempId;
-                                msgToSend = "7_ok";
+                                int tempId = db.GetUserID(arr[1], arr[2]);
+                                if (tempId == -1 || tempId == 0)
+                                {
+                                    msgToSend = "8_user taken";
+                                }
+                                else
+                                {
+                                    userID = tempId;
+                                    msgToSend = "7_ok";
+                                }
                             }
                         }
                         else if (arr[0] == "4")
@@ -147,11 +153,13 @@ class Program
                             {
                                 //end of game
                                 db.SetCurrentGameToLast(userID);
+                                Console.WriteLine(Thread.CurrentThread.Name + " end of game");
                             }
                             else
                             {
                                 //reset button
                                 db.ResetCurrentGame(userID);
+                                Console.WriteLine(Thread.CurrentThread.Name + " restart");
                             }
                             board = new AiBoard();
                             msgToSend = "4_ok_" + FEN;
@@ -159,7 +167,6 @@ class Program
                         else if (arr[0] == "7")
                         {
                             threads.Remove(Thread.CurrentThread);
-                           // Thread.CurrentThread.Abort();
                         }
                         else
                             msgToSend = "11_msg not in format";

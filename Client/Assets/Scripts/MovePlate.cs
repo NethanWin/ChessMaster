@@ -46,18 +46,18 @@ public class MovePlate : MonoBehaviour
         piece.MoveToTarget();
         game.SetPosition(pieceObject);
         game.DestroyAllMovePlates();
-
-        client.SetWaitForServer(true);
+        client.SetWaitForServer(false);
         client.SendMsg(string.Format("1_{0}_{1}", tempP, pBoard));
     }
     public void SetPoint(Point p)
     {
         pBoard = new Point(p);
     }
-    public void SetVars(Move m, GameObject go, bool attack)
+    public void SetVars(Move m, GameObject go, bool attack, Client client2)
     {
         pBoard = new Point(m.GetTargetPoint());
         pieceObject = go;
         this.attack = attack;
+        client = client2;
     }
 }

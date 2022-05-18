@@ -15,10 +15,7 @@ class Program
     public const int SERVER_PORT = 11000;
     public static void Main(string[] args)
     {
-        //DBManager db = new DBManager();
         ManagingClients();
-        //MinmaxPerformanceTest();
-        //TestEvaluation();
     }
     public static IPAddress GetHostsIP()
     {
@@ -173,7 +170,6 @@ class Program
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex);
                         msgToSend = "11_msg not in format";
                     }
                     finally
@@ -238,9 +234,6 @@ class Program
     //Testing
     public static void MinmaxPerformanceTest()
     {
-        //Board b = new Board();
-        //Move m = new Move(new Point(0,0), new Point(0,2));
-        //Move m2 = new Move(new Point(0,1), new Point(0,3));
         Move m;
         Stopwatch stopwatch = new Stopwatch();
         AiBoard b = new AiBoard();
@@ -259,16 +252,5 @@ class Program
             Console.WriteLine(stopwatch.ElapsedMilliseconds / 1000.0);
             stopwatch.Reset();
         }
-        
-
-        
-    }
-    public static void TestEvaluation()
-    {
-        AiBoard b = new AiBoard("8/8/8/8/8/8/P7/k7");
-        Move m = Ai.GetBestMove(b);
-        b.MakeMove(m);
-        Console.WriteLine();
-        Console.WriteLine(b.EvaluateBoard(false));
     }
 }

@@ -41,10 +41,8 @@ class Program
         Console.WriteLine("Welcome to ChessMaster!");
         Console.WriteLine("The server is now open for clients");
         Console.WriteLine();
-        Console.WriteLine("Please copy this text to the client's IP field:");
-        Console.WriteLine(ipAddress.ToString());
         Console.WriteLine();
-        IPEndPoint localEndPoint = new IPEndPoint(ipAddress, SERVER_PORT);
+        IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), SERVER_PORT);
 
         // Create a Socket that will use Tcp protocol
         Socket serverSocket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);

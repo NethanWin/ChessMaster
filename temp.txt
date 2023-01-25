@@ -1,0 +1,108 @@
+import collections
+
+
+def get_bonus_dict(text):
+    dict = {}
+    text = text.replace('\t',' ')
+    list = text.split('\n')
+    
+    for line in list:
+        line_list = line.split(' ')
+        
+        
+        if len(line_list) > 11:
+            if line_list[11] == 'בוצעה':
+                bonus = get_bonus(int(line_list[8]))
+                add_to_dict(dict, bonus, True)
+                    
+            elif line_list[10] == 'זוכתה':
+                bonus = get_bonus(int(line_list[7]))
+                add_to_dict(dict, bonus, False)
+                
+    dict = collections.OrderedDict(sorted(dict.items()))
+    return dict
+
+
+def print_dict(dict):
+    sum = 0
+    for k, v in dict.items():
+        sum += k * v
+        print(k, v)
+    sum *= 3
+    print('\n', sum, 'NIS')
+    
+    
+def add_to_dict(dict, bonus, is_add):
+    if bonus != 0:
+        if bonus not in dict:
+            dict[bonus] = 0
+        dict[bonus] += 1 if is_add else -1
+    
+    
+def get_bonus(price):
+    switcher = {
+        0:0,
+        40:0,
+        59:1,
+        79:2,
+        80:2,
+        89:1,
+        100:0,
+        130:3,
+        139:3,
+        136:3,
+        140:3,
+        160:4,
+        190:5,
+        212:7,
+        220:7,
+        222:7,
+        289:8
+    }
+    if price in switcher:
+        return switcher[price]
+    else:
+        print(price,'price not found')
+        return price
+
+
+def main():
+    txt = """
+    
+    enter text from here:
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    till here
+    
+    """
+    
+    dict = get_bonus_dict(txt)
+    print_dict(dict)
+
+if __name__ == '__main__':
+    main()

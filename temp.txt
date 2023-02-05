@@ -115,7 +115,21 @@ def get_bonus(price):
         222:7,
         229:7,
         289:8,
-        299:8
+        299:8,
+        
+        
+        170:1,
+        171:1,
+        200:4,
+        205:4,
+        
+        186:1,
+        269:3,
+        285:5,
+        
+        262:1,
+        376:4,
+        414:7
     }
     if price in switcher:
         return switcher[price]
@@ -167,19 +181,11 @@ def main():
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
     till here
     """
     
     dict = get_bonus_dict(txt, start_time)
-    print_dict(dict,is_terminal_1)
+    print_dict(dict, is_terminal_1)
 
 
 if __name__ == '__main__':
